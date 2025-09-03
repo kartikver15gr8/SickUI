@@ -1,4 +1,4 @@
-# SickUI
+# SickUI (Under Development)
 
 A modern, high-performance React component library built with TypeScript, Tailwind CSS, and Radix UI primitives.
 
