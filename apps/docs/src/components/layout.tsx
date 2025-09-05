@@ -15,9 +15,9 @@ const navigation = [
 
 const componentLinks = [
   { name: "Button", href: "/docs/components/button" },
-  { name: "Card", href: "/docs/components/card" },
-  { name: "Input", href: "/docs/components/input" },
-  { name: "Badge", href: "/docs/components/badge" },
+  // { name: "Card", href: "/docs/components/card" },
+  // { name: "Input", href: "/docs/components/input" },
+  // { name: "Badge", href: "/docs/components/badge" },
 ];
 
 interface LayoutProps {
