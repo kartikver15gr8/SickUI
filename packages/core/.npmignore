@@ -1,0 +1,115 @@
+# Source files (only ship built files)
+src/
+*.ts
+*.tsx
+!*.d.ts
+
+# Development files
+tsconfig.json
+tsup.config.ts
+tailwind.config.js
+postcss.config.js
+.eslintrc.js
+.eslintrc.json
+.eslintrc.yaml
+.eslintrc.yml
+.eslintignore
+.prettierrc
+.prettierrc.json
+.prettierrc.yaml
+.prettierrc.yml
+.prettierignore
+
+# Testing
+__tests__/
+*.test.*
+*.spec.*
+test/
+tests/
+coverage/
+.nyc_output/
+jest.config.*
+vitest.config.*
+.vitest/
+
+# Build tools
+.turbo/
+.next/
+.cache/
+.parcel-cache/
+.vite/
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary folders
+tmp/
+temp/
+
+# Documentation source (keep built docs)
+docs/
+.storybook/
+stories/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+.jenkins/
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.pnpm-store/
+
+# Misc
+*.tgz
+*.tar.gz
+.npmrc

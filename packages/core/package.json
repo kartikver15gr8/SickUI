@@ -1,7 +1,31 @@
 {
   "name": "@sickui/core",
-  "version": "0.1.0",
-  "description": "Core components for SickUI library",
+  "version": "0.0.1",
+  "description": "A modern, high-performance React component library built with TypeScript, Tailwind CSS, and Radix UI primitives",
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "design-system",
+    "typescript",
+    "tailwind",
+    "tailwindcss",
+    "radix-ui",
+    "accessible",
+    "headless",
+    "component-library",
+    "sickui"
+  ],
+  "author": "SickUI Team",
+  "homepage": "https://github.com/kartikver15gr8/SickUI#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kartikver15gr8/SickUI.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/kartikver15gr8/SickUI/issues"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -11,7 +35,7 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
-    "./styles": "./dist/styles.css"
+    "./styles": "./dist/styles/globals.css"
   },
   "files": [
     "dist/**"
