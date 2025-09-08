@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Button } from "@sickui/core";
-import { ArrowRight, Zap, Palette, Code } from "lucide-react";
+import { ArrowRight, Terminal, Copy, Palette, Code } from "lucide-react";
 import Layout from "../components/layout";
+import { CodeBlock } from "../components/code-block";
 
 export default function Home() {
   return (
@@ -9,20 +10,38 @@ export default function Home() {
       <div className="flex flex-col min-h-screen">
         {/* Hero Section */}
         <section className="flex-1 flex items-center justify-center px-4 py-16 md:py-24">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <div className="space-y-4">
+          <div className="max-w-6xl mx-auto text-center space-y-12">
+            <div className="space-y-6">
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 SickUI
               </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                A modern, high-performance React component library built with
-                TypeScript, Tailwind CSS, and Radix UI primitives. Copy, paste,
-                and customize.
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                Beautifully designed components that you can copy and paste into
+                your apps. Accessible. Customizable. Open Source.
               </p>
             </div>
 
+            {/* CLI Demo */}
+            <div className="max-w-2xl mx-auto space-y-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                <Terminal className="w-4 h-4" />
+                <span>Get started in seconds</span>
+              </div>
+
+              <div className="grid gap-3">
+                <CodeBlock
+                  code="npx @sickui/cli init"
+                  title="Initialize your project"
+                />
+                <CodeBlock
+                  code="npx @sickui/cli add button"
+                  title="Add components"
+                />
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/docs/getting-started">
+              <Link href="/docs/installation">
                 <Button size="lg" className="gap-2">
                   Get Started
                   <ArrowRight className="w-4 h-4" />
@@ -31,7 +50,7 @@ export default function Home() {
               <Link href="/docs/components">
                 <Button variant="outline" size="lg" className="gap-2">
                   <Code className="w-4 h-4" />
-                  View Components
+                  Browse Components
                 </Button>
               </Link>
             </div>
@@ -44,20 +63,20 @@ export default function Home() {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tight">Why SickUI?</h2>
               <p className="text-muted-foreground mt-4">
-                Built with modern tools and best practices for the best
-                developer experience.
+                Copy, paste, own. The simplest way to add components to your
+                project.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center space-y-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto">
-                  <Zap className="w-6 h-6 text-blue-600" />
+                  <Copy className="w-6 h-6 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold">Lightning Fast</h3>
+                <h3 className="text-xl font-semibold">Copy & Paste</h3>
                 <p className="text-muted-foreground">
-                  Built with Vite and optimized for performance with
-                  tree-shaking and minimal bundle size.
+                  Copy the code directly into your project. No package
+                  dependencies. You own the code.
                 </p>
               </div>
 
@@ -67,19 +86,19 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-semibold">Fully Customizable</h3>
                 <p className="text-muted-foreground">
-                  CSS variables and Tailwind classes make theming and
-                  customization effortless.
+                  Built with Tailwind CSS and CSS variables. Customize colors,
+                  spacing, and styling to match your design.
                 </p>
               </div>
 
               <div className="text-center space-y-4">
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto">
-                  <Code className="w-6 h-6 text-green-600" />
+                  <Terminal className="w-6 h-6 text-green-600" />
                 </div>
-                <h3 className="text-xl font-semibold">Developer Experience</h3>
+                <h3 className="text-xl font-semibold">CLI Powered</h3>
                 <p className="text-muted-foreground">
-                  TypeScript-first with excellent IntelliSense and comprehensive
-                  documentation.
+                  Use our CLI to add components to your project. Automatic
+                  dependency installation and setup.
                 </p>
               </div>
             </div>
@@ -88,25 +107,57 @@ export default function Home() {
 
         {/* Component Preview */}
         <section className="py-16">
-          <div className="max-w-4xl mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold tracking-tight mb-8">
-              Component Showcase
-            </h2>
-            <div className="bg-card border rounded-lg p-8 shadow-sm">
-              <div className="flex flex-wrap gap-4 justify-center">
-                <Button>Default</Button>
-                <Button variant="secondary">Secondary</Button>
-                <Button variant="outline">Outline</Button>
-                <Button variant="ghost">Ghost</Button>
-                <Button variant="destructive">Destructive</Button>
-                <Button size="sm">Small</Button>
-                <Button size="lg">Large</Button>
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold tracking-tight mb-4">
+                Built with Modern Stack
+              </h2>
+              <p className="text-muted-foreground">
+                Every component is built with accessibility and customization in
+                mind.
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              {/* Component Demo */}
+              <div className="bg-card border rounded-lg p-8 shadow-sm">
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    <Button>Default</Button>
+                    <Button variant="secondary">Secondary</Button>
+                    <Button variant="outline">Outline</Button>
+                  </div>
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    <Button variant="ghost">Ghost</Button>
+                    <Button variant="destructive">Destructive</Button>
+                    <Button size="sm">Small</Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Code Example */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold">Add to your project</h3>
+                <CodeBlock code="npx @sickui/cli add button" showCopy={true} />
+                <div className="text-sm text-muted-foreground">
+                  <p>Then use in your components:</p>
+                </div>
+                <CodeBlock
+                  code={`import { Button } from "@/components/ui/button"
+
+export function MyComponent() {
+  return <Button>Click me</Button>
+}`}
+                  language="tsx"
+                  showCopy={true}
+                />
               </div>
             </div>
-            <div className="mt-8">
+
+            <div className="text-center mt-12">
               <Link href="/docs/components">
-                <Button variant="outline">
-                  View All Components
+                <Button variant="outline" size="lg">
+                  Browse All Components
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>

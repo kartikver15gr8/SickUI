@@ -1,5 +1,6 @@
 import { Button } from "@sickui/core";
 import type { Metadata } from "next";
+import { CodeBlock } from "../../../../components/code-block";
 
 export const metadata: Metadata = {
   title: "Button",
@@ -33,10 +34,20 @@ export default function ButtonDocs() {
         <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
           Installation
         </h2>
-        <div className="rounded-md bg-muted p-4">
-          <pre className="font-mono text-sm">
-            <code>{`npm install @sickui/core`}</code>
-          </pre>
+        <div className="space-y-4">
+          <p className="text-muted-foreground">
+            Install the button component using the SickUI CLI:
+          </p>
+          <CodeBlock code="npx @sickui/cli add button" title="Terminal" />
+          <div className="bg-card border rounded-lg p-4">
+            <h4 className="font-semibold mb-2">Dependencies installed:</h4>
+            <ul className="text-sm text-muted-foreground space-y-1">
+              <li>• @radix-ui/react-slot</li>
+              <li>• class-variance-authority</li>
+              <li>• clsx</li>
+              <li>• tailwind-merge</li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -45,14 +56,19 @@ export default function ButtonDocs() {
         <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
           Usage
         </h2>
-        <div className="rounded-md bg-muted p-4">
-          <pre className="font-mono text-sm">
-            <code>{`import { Button } from "@sickui/core"
+        <div className="space-y-4">
+          <p className="text-muted-foreground">
+            Import and use the button component in your React application:
+          </p>
+          <CodeBlock
+            code={`import { Button } from "@/components/ui/button"
 
 export default function Example() {
   return <Button>Button</Button>
-}`}</code>
-          </pre>
+}`}
+            language="tsx"
+            title="app/page.tsx"
+          />
         </div>
       </div>
 
@@ -63,22 +79,18 @@ export default function Example() {
         </h2>
 
         {/* Default */}
-        <div className="space-y-2">
+        <div className="space-y-4">
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
             Default
           </h3>
           <div className="rounded-md border p-8">
             <Button>Button</Button>
           </div>
-          <div className="rounded-md bg-muted p-4">
-            <pre className="font-mono text-sm">
-              <code>{`<Button>Button</Button>`}</code>
-            </pre>
-          </div>
+          <CodeBlock code={`<Button>Button</Button>`} language="tsx" />
         </div>
 
         {/* Variants */}
-        <div className="space-y-2">
+        <div className="space-y-4">
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
             Variants
           </h3>
@@ -92,20 +104,19 @@ export default function Example() {
               <Button variant="link">Link</Button>
             </div>
           </div>
-          <div className="rounded-md bg-muted p-4">
-            <pre className="font-mono text-sm">
-              <code>{`<Button variant="default">Default</Button>
+          <CodeBlock
+            code={`<Button variant="default">Default</Button>
 <Button variant="destructive">Destructive</Button>
 <Button variant="outline">Outline</Button>
 <Button variant="secondary">Secondary</Button>
 <Button variant="ghost">Ghost</Button>
-<Button variant="link">Link</Button>`}</code>
-            </pre>
-          </div>
+<Button variant="link">Link</Button>`}
+            language="tsx"
+          />
         </div>
 
         {/* Sizes */}
-        <div className="space-y-2">
+        <div className="space-y-4">
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
             Sizes
           </h3>
@@ -116,13 +127,12 @@ export default function Example() {
               <Button size="lg">Large</Button>
             </div>
           </div>
-          <div className="rounded-md bg-muted p-4">
-            <pre className="font-mono text-sm">
-              <code>{`<Button size="sm">Small</Button>
+          <CodeBlock
+            code={`<Button size="sm">Small</Button>
 <Button size="default">Default</Button>
-<Button size="lg">Large</Button>`}</code>
-            </pre>
-          </div>
+<Button size="lg">Large</Button>`}
+            language="tsx"
+          />
         </div>
       </div>
 

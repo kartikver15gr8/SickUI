@@ -1,0 +1,65 @@
+{
+  "name": "@sickui/cli",
+  "version": "0.0.3",
+  "description": "CLI for adding SickUI components to your project",
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "cli",
+    "sickui",
+    "tailwind",
+    "typescript"
+  ],
+  "author": "SickUI Team",
+  "license": "MIT",
+  "homepage": "https://github.com/kartikver15gr8/SickUI#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kartikver15gr8/SickUI.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/kartikver15gr8/SickUI/issues"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "sickui": "dist/index.js"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1",
+    "prompts": "^2.4.2",
+    "fs-extra": "^11.2.0",
+    "node-fetch": "^2.7.0",
+    "execa": "^5.1.1",
+    "cosmiconfig": "^9.0.0",
+    "zod": "^3.23.8",
+    "ts-morph": "^23.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.14.8",
+    "@types/node-fetch": "^2.6.11",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.5.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

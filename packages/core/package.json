@@ -1,6 +1,6 @@
 {
   "name": "@sickui/core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A modern, high-performance React component library built with TypeScript, Tailwind CSS, and Radix UI primitives",
   "keywords": [
     "react",
