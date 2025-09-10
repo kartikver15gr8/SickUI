@@ -11,11 +11,11 @@ interface CodeBlockProps {
   showCopy?: boolean;
 }
 
-export function CodeBlock({ 
-  code, 
-  language = "bash", 
-  title, 
-  showCopy = true 
+export function CodeBlock({
+  code,
+  language = "bash",
+  title,
+  showCopy = true,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 
@@ -30,14 +30,14 @@ export function CodeBlock({
   };
 
   return (
-    <div className="relative">
+    <div className="relative border rounded-lg dark:border-[#2E2E2E]">
       {title && (
-        <div className="flex items-center justify-between px-4 py-2 bg-muted border-b">
+        <div className="flex items-center rounded-t-lg justify-between px-4 py-2 bg-muted border-b">
           <span className="text-sm font-medium">{title}</span>
         </div>
       )}
       <div className="relative">
-        <pre className="bg-slate-950 text-slate-50 p-4 rounded-lg overflow-x-auto">
+        <pre className="bg-[#F8F8F8] text-slate-900 dark:bg-[#161616] dark:text-slate-50 p-4 rounded-b-lg overflow-x-auto">
           <code className={`language-${language}`}>{code}</code>
         </pre>
         {showCopy && (

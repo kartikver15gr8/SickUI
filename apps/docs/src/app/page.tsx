@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Button } from "@sickui/core";
 import { ArrowRight, Terminal, Copy, Palette, Code } from "lucide-react";
-import Layout from "../components/layout";
 import { CodeBlock } from "../components/code-block";
+import HomeLayout from "../components/navbar/home-layout";
 
 export default function Home() {
   return (
-    <Layout>
+    <HomeLayout>
       <div className="flex flex-col min-h-screen">
         {/* Hero Section */}
         <section className="flex-1 flex items-center justify-center px-4 py-16 md:py-24">
@@ -165,6 +165,6 @@ export function MyComponent() {
           </div>
         </section>
       </div>
-    </Layout>
+    </HomeLayout>
   );
 }
