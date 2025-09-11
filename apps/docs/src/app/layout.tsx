@@ -10,28 +10,37 @@ const nunito = Nunito_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "SickUI - Modern React Component Library",
+    default: "SickUI - Copy & Paste React Components",
     template: "%s | SickUI",
   },
   description:
-    "A modern, high-performance React component library built with TypeScript, Tailwind CSS, and Radix UI primitives.",
-  keywords: ["React", "Components", "TypeScript", "Tailwind CSS", "UI Library"],
+    "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
+  keywords: [
+    "React",
+    "Components",
+    "TypeScript",
+    "Tailwind CSS",
+    "CLI",
+    "Copy Paste",
+    "shadcn",
+    "UI Library",
+  ],
   authors: [{ name: "SickUI Team" }],
   creator: "SickUI Team",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://sickui.dev",
-    title: "SickUI - Modern React Component Library",
+    title: "SickUI - Copy & Paste React Components",
     description:
-      "A modern, high-performance React component library built with TypeScript, Tailwind CSS, and Radix UI primitives.",
+      "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
     siteName: "SickUI",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SickUI - Modern React Component Library",
+    title: "SickUI - Copy & Paste React Components",
     description:
-      "A modern, high-performance React component library built with TypeScript, Tailwind CSS, and Radix UI primitives.",
+      "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
     creator: "@sickui",
   },
   robots: {
@@ -57,7 +66,7 @@ export default function RootLayout({
       <body className={nunito.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >

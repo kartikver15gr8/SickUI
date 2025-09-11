@@ -22,6 +22,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bug fixes and stability improvements
 
+## [0.0.2] - 2024-12-05
+
+### Fixed
+
+- **CSS Compatibility**: Fixed `border-border` utility class error in Vite projects
+- **Tailwind Integration**: Replaced `@apply` directives with direct CSS properties for better compatibility
+- **Documentation**: Updated README with complete Tailwind CSS configuration including custom colors
+
+### Changed
+
+- Updated CSS to use `hsl(var(--border))` instead of `@apply border-border`
+- Enhanced Tailwind configuration documentation with all required color variables
+
 ## [0.0.1] - 2024-12-05
 
 ### Added

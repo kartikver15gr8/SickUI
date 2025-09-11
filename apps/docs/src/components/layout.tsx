@@ -8,8 +8,9 @@ import { ThemeToggle } from "./theme-toggle";
 
 const navigation = [
   { name: "Home", href: "/" },
-  { name: "Getting Started", href: "/docs/getting-started" },
+  { name: "Installation", href: "/docs/installation" },
   { name: "Components", href: "/docs/components" },
+  { name: "CLI", href: "/docs/cli" },
 ];
 
 const componentLinks = [
@@ -77,7 +78,7 @@ export default function Layout({ children }: LayoutProps) {
             <nav className="flex items-center gap-2">
               <ThemeToggle />
               <Link
-                href="https://github.com/yourusername/sickui"
+                href="https://github.com/kartikver15gr8/SickUI"
                 className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background hover:bg-accent hover:text-accent-foreground h-9 py-2 px-0 w-9"
               >
                 <span className="sr-only">GitHub</span>
@@ -101,14 +102,24 @@ export default function Layout({ children }: LayoutProps) {
                   </h4>
                   <div className="grid grid-flow-row auto-rows-max text-sm">
                     <Link
-                      href="/docs/getting-started"
+                      href="/docs/installation"
                       className={`group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline ${
-                        pathname === "/docs/getting-started"
+                        pathname === "/docs/installation"
                           ? "font-medium text-foreground"
                           : "text-muted-foreground"
                       }`}
                     >
                       Installation
+                    </Link>
+                    <Link
+                      href="/docs/cli"
+                      className={`group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline ${
+                        pathname === "/docs/cli"
+                          ? "font-medium text-foreground"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      CLI Reference
                     </Link>
                   </div>
                 </div>

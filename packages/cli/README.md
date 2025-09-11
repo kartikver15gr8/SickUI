@@ -1,0 +1,147 @@
+# @sickui/cli
+
+A CLI for adding SickUI components to your project.
+
+## Installation
+
+```bash
+npm install -g @sickui/cli
+```
+
+## Usage
+
+Use the `sickui` command to add components to your project.
+
+```bash
+npx @sickui/cli init
+```
+
+You will be asked a few questions to configure `components.json`:
+
+```txt
+Which style would you like to use? › Default
+Which color would you like to use as base color? › Slate
+Would you like to use CSS variables for colors? › no / yes
+```
+
+### init
+
+```bash
+npx @sickui/cli init
+```
+
+Initialize your project and install dependencies.
+
+#### Options
+
+```txt
+Usage: sickui init [options]
+
+initialize your project and install dependencies
+
+Options:
+  -y, --yes        skip confirmation prompt. (default: false)
+  -d, --defaults,  use default configuration. (default: false)
+  -c, --cwd <cwd>  the working directory. defaults to the current directory.
+  -h, --help       display help for command
+```
+
+### add
+
+```bash
+npx @sickui/cli add [component]
+```
+
+Add a component to your project.
+
+```bash
+npx @sickui/cli add button
+```
+
+You can also run the command without any arguments to view a list of all available components:
+
+```bash
+npx @sickui/cli add
+```
+
+#### Options
+
+```txt
+Usage: sickui add [options] [components...]
+
+add a component to your project
+
+Arguments:
+  components         the components to add
+
+Options:
+  -y, --yes          skip confirmation prompt. (default: false)
+  -o, --overwrite    overwrite existing files. (default: false)
+  -c, --cwd <cwd>    the working directory. defaults to the current directory.
+  -a, --all          add all available components (default: false)
+  -p, --path <path>  the path to add the component to.
+  -h, --help         display help for command
+```
+
+### list
+
+```bash
+npx @sickui/cli list
+```
+
+List all available components.
+
+### diff (experimental)
+
+```bash
+npx @sickui/cli diff [component]
+```
+
+Check for updates against the registry.
+
+Running the following command will check if there's an update available for the `button` component:
+
+```bash
+npx @sickui/cli diff button
+```
+
+## FAQ
+
+### Why use a CLI instead of an npm package?
+
+The CLI approach gives you full control over the components. You can modify them as needed, and you don't have to worry about version conflicts or breaking changes.
+
+### Can I use this in my existing project?
+
+Yes! The CLI is designed to work with existing projects. Just run `npx @sickui/cli init` to get started.
+
+### What happens when I run init?
+
+Running `init` will:
+
+1. Create a `components.json` file in your project root
+2. Create a `lib/utils.ts` file with the `cn` helper
+3. Create a `components/ui` directory for your components
+4. Install the required dependencies
+
+### What happens when I run add?
+
+Running `add` will:
+
+1. Check if the component exists in the registry
+2. Check if you have a `components.json` file (if not, you'll be prompted to run `init`)
+3. Install the component dependencies
+4. Create the component files in your project
+
+### Can I customize the components after adding them?
+
+Yes! That's the whole point. The components are copied to your project, so you can modify them as needed.
+
+### How do I update a component?
+
+You can use the `diff` command to check if there's an update available, then run `add` with the `--overwrite` flag to update the component.
+
+```bash
+npx @sickui/cli diff button
+npx @sickui/cli add button --overwrite
+```
