@@ -9,6 +9,7 @@ const nunito = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sickui.com"),
   title: {
     default: "SickUI - Copy & Paste React Components",
     template: "%s | SickUI",
@@ -24,38 +25,51 @@ export const metadata: Metadata = {
     "Copy Paste",
     "shadcn",
     "UI Library",
+    "Design System",
+    "Frontend",
+    "Web Development",
   ],
-  authors: [{ name: "KartikeyStack" }],
+  authors: [
+    { name: "KartikeyStack", url: "https://github.com/kartikver15gr8" },
+  ],
   creator: "KartikeyStack",
+  publisher: "SickUI",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://sickui.com/opengraph-image.png",
+    url: "https://sickui.com",
     title: "SickUI - Copy & Paste React Components",
     description:
-      "A modern open-source UI library. Flexible primitives, zero clutter, maximum control.",
+      "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
     siteName: "SickUI",
     images: [
       {
-        url: "https://sickui.com/opengraph-image.png",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "SickUI",
+        alt: "SickUI - Modern React Component Library",
+        type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SickUI - Primitives, not prescriptions, build your UI your way.",
+    title: "SickUI - Copy & Paste React Components",
     description:
       "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
     creator: "@KartikeyStack",
+    site: "@SickUI",
     images: [
       {
-        url: "https://sickui.com/opengraph-image.png",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "SickUI",
+        alt: "SickUI - Modern React Component Library",
       },
     ],
   },
@@ -70,6 +84,12 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: "your-google-verification-code", // Add your actual verification code
+    // yandex: "your-yandex-verification-code",
+    // yahoo: "your-yahoo-verification-code",
+  },
+  category: "technology",
 };
 
 export default function RootLayout({
