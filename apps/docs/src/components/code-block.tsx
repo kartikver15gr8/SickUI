@@ -30,7 +30,7 @@ export function CodeBlock({
   };
 
   return (
-    <div className="relative border rounded-lg dark:border-[#2E2E2E]">
+    <div className="relative border rounded-lg dark:border-[#2E2E2E] text-[12px] md:text-[14px] lg:text-[15px]">
       {title && (
         <div className="flex items-center rounded-t-lg justify-between px-4 py-2 bg-muted border-b">
           <span className="text-sm font-medium">{title}</span>
