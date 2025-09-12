@@ -55,7 +55,7 @@ const wrapperVariants = {
 };
 
 const COLORS = {
-  headerBorder: "border border-[#9DA3AF] dark:border-[#2D2D2D]",
+  headerBorder: "border border-[#d5d5d5] dark:border-[#212121]",
   searchBg: "bg-[#f0f0f0] dark:bg-[#1e1e1e58]",
   searchBorder: "border border-[#9CA3AF] dark:border-[#2d2d2d]",
   buttonBorder: "border border-[#9CA3AF] dark:border-[#4c5055]",
@@ -100,7 +100,7 @@ export default function HomeLayout({
             <Link href="/" className="flex items-center space-x-3 mr-5">
               <Image
                 className={`h-9 w-9 dark:border ${COLORS.logoBorder} rounded-lg`}
-                src={"/logo/sickuilogo.png"}
+                src={"/logo/sickui-logo.png"}
                 alt="SickUI Logo"
                 width={200}
                 height={200}
