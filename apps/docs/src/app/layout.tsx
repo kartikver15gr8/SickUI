@@ -30,18 +30,18 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://sickui.dev",
+    url: "https://sickui.com/opengraph-image.png",
     title: "SickUI - Copy & Paste React Components",
     description:
-      "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
+      "A modern open-source UI library. Flexible primitives, zero clutter, maximum control.",
     siteName: "SickUI",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SickUI - Copy & Paste React Components",
+    title: "SickUI - Primitives, not prescriptions, build your UI your way.",
     description:
       "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
-    creator: "@sickui",
+    creator: "@KartikeyStack",
   },
   robots: {
     index: true,
