@@ -25,8 +25,8 @@ export const metadata: Metadata = {
     "shadcn",
     "UI Library",
   ],
-  authors: [{ name: "SickUI Team" }],
-  creator: "SickUI Team",
+  authors: [{ name: "KartikeyStack" }],
+  creator: "KartikeyStack",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -35,6 +35,14 @@ export const metadata: Metadata = {
     description:
       "A modern open-source UI library. Flexible primitives, zero clutter, maximum control.",
     siteName: "SickUI",
+    images: [
+      {
+        url: "https://sickui.com/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "SickUI",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -42,6 +50,14 @@ export const metadata: Metadata = {
     description:
       "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
     creator: "@KartikeyStack",
+    images: [
+      {
+        url: "https://sickui.com/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "SickUI",
+      },
+    ],
   },
   robots: {
     index: true,
