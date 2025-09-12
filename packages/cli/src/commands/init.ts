@@ -275,9 +275,13 @@ export async function runInit(cwd: string, config: any, projectInfo: any) {
   logger.info("");
 
   // Write cn lib.
+  // Detect if project has src directory
+  const hasSrcDir = existsSync(path.resolve(cwd, "src"));
+  const basePath = hasSrcDir ? "src/" : "";
+
   const utilsDir = path.resolve(
     cwd,
-    config.aliases["utils"].replace(/^@\//, "src/")
+    config.aliases["utils"].replace(/^@\//, basePath)
   );
   const utilsPath = path.resolve(utilsDir, "..", "utils.ts");
 
@@ -291,7 +295,7 @@ export async function runInit(cwd: string, config: any, projectInfo: any) {
   // Create components directory.
   const componentsDir = path.resolve(
     cwd,
-    config.aliases["components"].replace(/^@\//, "src/")
+    config.aliases["components"].replace(/^@\//, basePath)
   );
   const componentsUiDir = path.resolve(componentsDir, "ui");
 

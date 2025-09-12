@@ -54,15 +54,29 @@ export async function resolveConfigPaths(cwd: string, config: Config) {
     resolvedPaths: {
       tailwindConfig: tailwindConfigPath,
       tailwindCss: tailwindCssPath,
-      utils: await resolveImport(config.aliases["utils"], config),
-      components: await resolveImport(config.aliases["components"], config),
+      utils: await resolveImport(config.aliases["utils"], config, cwd),
+      components: await resolveImport(
+        config.aliases["components"],
+        config,
+        cwd
+      ),
     },
   };
 }
 
-export async function resolveImport(importPath: string, config: Config) {
+export async function resolveImport(
+  importPath: string,
+  config: Config,
+  cwd?: string
+) {
   if (importPath.startsWith("@/")) {
-    return importPath.replace("@/", "src/");
+    // Detect if project has src directory
+    const projectCwd = cwd || process.cwd();
+    const hasSrcDir = await fs.pathExists(path.resolve(projectCwd, "src"));
+
+    // Use appropriate base path based on project structure
+    const basePath = hasSrcDir ? "src/" : "";
+    return importPath.replace("@/", basePath);
   }
 
   return importPath;
@@ -78,8 +92,7 @@ export async function getProjectInfo() {
 
   const isTypeScript = tsConfig.status === "fulfilled";
   const isNextJs =
-    packageJson.status === "fulfilled" &&
-    packageJson.value?.dependencies?.next;
+    packageJson.status === "fulfilled" && packageJson.value?.dependencies?.next;
   const isSrcDir = await fs.pathExists(path.resolve(cwd, "src"));
   const isAppDir = await fs.pathExists(
     path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`)
