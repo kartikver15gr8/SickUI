@@ -11,17 +11,17 @@ A modern, high-performance React component library built with TypeScript, Tailwi
 - **Developer Experience**: TypeScript-first with excellent IntelliSense
 - **Monorepo**: Turborepo for optimal development and build performance
 
-## 📦 Installation
+## 📦 Setup
 
 ```bash
-# Install pnpm if you haven't already
-npm install -g pnpm
+# Initialization
+npx @sickui/cli init
 
-# Install dependencies
-pnpm install
+# Install components
+npx @sickui/cli add button
 
 # Start development
-pnpm dev
+turbo dev
 ```
 
 ## 🏗️ Project Structure
@@ -29,6 +29,7 @@ pnpm dev
 ```
 sickui/
 ├── packages/
+|   ├── cli/                  # Command-line interface
 │   └── core/                 # Main component library
 │       ├── src/
 │       │   ├── components/   # React components
