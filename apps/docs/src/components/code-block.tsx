@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@sickui/core";
 import { Copy, Check } from "lucide-react";
+import { CodeHighlighter } from "./syntax-highlighter";
 
 interface CodeBlockProps {
   code: string;
@@ -37,14 +38,14 @@ export function CodeBlock({
         </div>
       )}
       <div className="relative">
-        <pre className="bg-[#F8F8F8] text-slate-900 dark:bg-[#161616] dark:text-slate-50 p-4 rounded-b-lg overflow-x-auto">
-          <code className={`language-${language}`}>{code}</code>
-        </pre>
+        <div className="rounded-b-lg overflow-hidden">
+          <CodeHighlighter code={code} language={language} className="" />
+        </div>
         {showCopy && (
           <Button
             variant="ghost"
             size="sm"
-            className="absolute top-2 right-2 h-8 w-8 p-0 text-slate-400 hover:text-slate-50"
+            className="absolute top-2 right-2 h-8 w-8 p-0 text-slate-400 hover:text-black dark:hover:text-white"
             onClick={copyToClipboard}
           >
             {copied ? (

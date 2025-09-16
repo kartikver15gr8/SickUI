@@ -214,7 +214,7 @@ export default function HomeLayout({
 
 function MobileNav({ isOpen }: { isOpen: boolean }) {
   return (
-    <div className="fixed mt-1 rounded  w-full z-50 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
+    <div className="fixed mt-[70px] rounded  w-full z-50 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
       <motion.div
         className=" z-50 relative w-full  bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg rounded-lg"
         initial="closed"

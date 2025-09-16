@@ -1,3 +1,5 @@
+const { withContentlayer } = require("next-contentlayer2");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -6,6 +8,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["@sickui/core"],
   },
+  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
 }
 
-module.exports = nextConfig
+module.exports = withContentlayer(nextConfig)

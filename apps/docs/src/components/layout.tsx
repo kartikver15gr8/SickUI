@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
+import GitHubStarBtn from "./githubstar-btn";
 
 const navigation = [
-  { name: "Home", href: "/" },
   { name: "Installation", href: "/docs/installation" },
   { name: "Components", href: "/docs/components" },
   { name: "CLI", href: "/docs/cli" },
@@ -76,13 +76,11 @@ export default function Layout({ children }: LayoutProps) {
               {/* Search would go here */}
             </div>
             <nav className="flex items-center gap-2">
+              <GitHubStarBtn />
+              <span
+                className={`border-[0.4px] h-5 rounded-full border-[#C6C9CF] dark:border-[#2D2D2D]`}
+              ></span>
               <ThemeToggle />
-              <Link
-                href="https://github.com/kartikver15gr8/SickUI"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background hover:bg-accent hover:text-accent-foreground h-9 py-2 px-0 w-9"
-              >
-                <span className="sr-only">GitHub</span>
-              </Link>
             </nav>
           </div>
         </div>
@@ -93,8 +91,8 @@ export default function Layout({ children }: LayoutProps) {
         // Docs layout with sidebar
         <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
           {/* Sidebar */}
-          <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block">
-            <div className="h-full py-6 pr-6 lg:py-8">
+          <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block border-r">
+            <div className="h-full py-6 lg:py-8">
               <div className="w-full">
                 <div className="pb-4">
                   <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">
