@@ -3,6 +3,7 @@ import { Button } from "@sickui/core";
 import { ArrowRight, Terminal, Copy, Palette, Code } from "lucide-react";
 import { CodeBlock } from "../components/code-block";
 import HomeLayout from "../components/navbar/home-layout";
+import FooterLayout from "../components/footer/footer-layout";
 
 export default function Home() {
   return (
@@ -165,6 +166,7 @@ export function MyComponent() {
           </div>
         </section>
       </div>
+      <FooterLayout />
     </HomeLayout>
   );
 }

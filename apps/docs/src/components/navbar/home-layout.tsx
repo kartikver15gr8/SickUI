@@ -91,7 +91,7 @@ export default function HomeLayout({
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background">
       <header className="sticky flex items-center top-0 z-50 w-full px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
         <div
           className={`px-2 my-2 h-[55px] w-full rounded-xl flex items-center justify-between  ${COLORS.headerBorder} bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 `}
@@ -203,48 +203,42 @@ export default function HomeLayout({
         </div>
       </header>
 
-      {isOpen && (
-        <div className="fixed mt-1 rounded  w-full z-50 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
-          <motion.div
-            className=" z-50 relative w-full  bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg rounded-lg"
-            initial="closed"
-            animate={isOpen ? "open" : "closed"}
-            variants={wrapperVariants}
-          >
-            <div className="font-medium border border-[#9DA3AF] dark:border-[#2D2D2D] rounded-lg flex flex-col shadow-[inset_5px_2px_30px_rgba(0,0,0,0.1)]">
-              {navigation.map((elem, key) => {
-                return (
-                  <motion.div
-                    variants={itemVariants}
-                    className={`h-12 flex items-center p-2 ${
-                      key < navigation.length - 1
-                        ? "border-b border-[#9DA3AF] dark:border-[#2D2D2D]"
-                        : ""
-                    }`}
-                    key={key}
-                  >
-                    <p>{elem.name}</p>
-                  </motion.div>
-                );
-              })}
-
-              {/* Todo: add Search and Github btn with theme toggle */}
-
-              {/* <motion.div
-                variants={itemVariants}
-                className={`h-12 flex justify-between items-center p-2 border-t border-[#9DA3AF] dark:border-[#2D2D2D]`}
-              >
-                <div className="border">dd</div>
-                <div className="border">ss</div>
-              </motion.div> */}
-            </div>
-          </motion.div>
-        </div>
-      )}
+      {isOpen && <MobileNav isOpen={isOpen} />}
 
       {searchBoxActive && <SearchBox />}
 
-      <main className="flex-1">{children}</main>
+      <main className="flex flex-col flex-1">{children}</main>
+    </div>
+  );
+}
+
+function MobileNav({ isOpen }: { isOpen: boolean }) {
+  return (
+    <div className="fixed mt-1 rounded  w-full z-50 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
+      <motion.div
+        className=" z-50 relative w-full  bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg rounded-lg"
+        initial="closed"
+        animate={isOpen ? "open" : "closed"}
+        variants={wrapperVariants}
+      >
+        <div className="font-medium border border-[#9DA3AF] dark:border-[#2D2D2D] rounded-lg flex flex-col shadow-[inset_5px_2px_30px_rgba(0,0,0,0.1)]">
+          {navigation.map((elem, key) => {
+            return (
+              <motion.div
+                variants={itemVariants}
+                className={`h-12 flex items-center p-2 ${
+                  key < navigation.length - 1
+                    ? "border-b border-[#9DA3AF] dark:border-[#2D2D2D]"
+                    : ""
+                }`}
+                key={key}
+              >
+                <p>{elem.name}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </motion.div>
     </div>
   );
 }
