@@ -14,6 +14,14 @@ import {
   ButtonLoading,
 } from "../registry/button-examples";
 
+// Import all calendar examples for direct use in MDX
+import {
+  CalendarDefault,
+  CalendarVariants,
+  CalendarDisabled,
+  CalendarNoAnimation,
+} from "../registry/calendar-examples";
+
 const components = {
   // HTML elements with custom styling
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -118,7 +126,7 @@ const components = {
   ),
   tr: ({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
     <tr
-      className={cn("m-0 border-t p-0 even:bg-muted", className)}
+      className={cn("even:bg-muted m-0 border-t p-0", className)}
       {...props}
     />
   ),
@@ -143,7 +151,7 @@ const components = {
   pre: ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) => (
     <pre
       className={cn(
-        "mb-4 mt-6 overflow-x-auto rounded-lg border bg-muted px-4 py-4",
+        "bg-muted mb-4 mt-6 overflow-x-auto rounded-lg border px-4 py-4",
         className
       )}
       {...props}
@@ -152,7 +160,7 @@ const components = {
   code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code
       className={cn(
-        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm",
+        "bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm",
         className
       )}
       {...props}
@@ -171,6 +179,12 @@ const components = {
   ButtonVariants,
   ButtonSizes,
   ButtonLoading,
+
+  // Calendar component examples
+  CalendarDefault,
+  CalendarVariants,
+  CalendarDisabled,
+  CalendarNoAnimation,
 
   // Callout component
   Callout: ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (

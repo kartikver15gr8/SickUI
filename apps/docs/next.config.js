@@ -9,6 +9,6 @@ const nextConfig = {
     optimizePackageImports: ["@sickui/core"],
   },
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
-}
+};
 
-module.exports = withContentlayer(nextConfig)
+module.exports = withContentlayer(nextConfig);

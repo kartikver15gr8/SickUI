@@ -31,21 +31,21 @@ export function CodeBlock({
   };
 
   return (
-    <div className="relative border rounded-lg dark:border-[#2E2E2E] text-[12px] md:text-[14px] lg:text-[15px]">
+    <div className="relative rounded-lg border text-[12px] md:text-[14px] lg:text-[15px] dark:border-[#2E2E2E]">
       {title && (
-        <div className="flex items-center rounded-t-lg justify-between px-4 py-2 bg-muted border-b">
+        <div className="bg-muted flex items-center justify-between rounded-t-lg border-b px-4 py-2">
           <span className="text-sm font-medium">{title}</span>
         </div>
       )}
       <div className="relative">
-        <div className="rounded-b-lg overflow-hidden">
+        <div className="overflow-hidden rounded-b-lg">
           <CodeHighlighter code={code} language={language} className="" />
         </div>
         {showCopy && (
           <Button
             variant="ghost"
             size="sm"
-            className="absolute top-2 right-2 h-8 w-8 p-0 text-slate-400 hover:text-black dark:hover:text-white"
+            className="absolute right-2 top-2 h-8 w-8 p-0 text-slate-400 hover:text-black dark:hover:text-white"
             onClick={copyToClipboard}
           >
             {copied ? (

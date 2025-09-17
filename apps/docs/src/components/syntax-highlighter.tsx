@@ -33,7 +33,7 @@ export function CodeHighlighter({
     // Return a placeholder with similar styling to avoid hydration mismatch
     return (
       <pre
-        className={`max-h-[350px] overflow-x-auto bg-[#F8F8F8] dark:bg-[#161616] p-4 text-sm ${className}`}
+        className={`max-h-[350px] overflow-x-auto bg-[#F8F8F8] p-4 text-sm dark:bg-[#161616] ${className}`}
       >
         <code>{code}</code>
       </pre>

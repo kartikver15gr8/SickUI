@@ -3,7 +3,7 @@ import path from "path";
 
 export function validateProjectStructure(cwd: string) {
   const packageJsonPath = path.resolve(cwd, "package.json");
-  
+
   if (!existsSync(packageJsonPath)) {
     throw new Error(
       "package.json not found. Please make sure you're in a valid project directory."

@@ -15,6 +15,7 @@ const navigation = [
 
 const componentLinks = [
   { name: "Button", href: "/docs/components/button" },
+  { name: "Calendar", href: "/docs/components/calendar" },
   // { name: "Card", href: "/docs/components/card" },
   // { name: "Input", href: "/docs/components/input" },
   // { name: "Badge", href: "/docs/components/badge" },
@@ -34,9 +35,9 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
         <div className="container flex h-14 items-center">
           <div className="mr-4 hidden md:flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
@@ -47,7 +48,7 @@ export default function Layout({ children }: LayoutProps) {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`transition-colors hover:text-foreground/80 ${
+                  className={`hover:text-foreground/80 transition-colors ${
                     isActive(item.href)
                       ? "text-foreground"
                       : "text-foreground/60"
@@ -78,7 +79,7 @@ export default function Layout({ children }: LayoutProps) {
             <nav className="flex items-center gap-2">
               <GitHubStarBtn />
               <span
-                className={`border-[0.4px] h-5 rounded-full border-[#C6C9CF] dark:border-[#2D2D2D]`}
+                className={`h-5 rounded-full border-[0.4px] border-[#C6C9CF] dark:border-[#2D2D2D]`}
               ></span>
               <ThemeToggle />
             </nav>
@@ -91,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
         // Docs layout with sidebar
         <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
           {/* Sidebar */}
-          <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block border-r">
+          <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 border-r md:sticky md:block">
             <div className="h-full py-6 lg:py-8">
               <div className="w-full">
                 <div className="pb-4">
@@ -103,7 +104,7 @@ export default function Layout({ children }: LayoutProps) {
                       href="/docs/installation"
                       className={`group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline ${
                         pathname === "/docs/installation"
-                          ? "font-medium text-foreground"
+                          ? "text-foreground font-medium"
                           : "text-muted-foreground"
                       }`}
                     >
@@ -113,7 +114,7 @@ export default function Layout({ children }: LayoutProps) {
                       href="/docs/cli"
                       className={`group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline ${
                         pathname === "/docs/cli"
-                          ? "font-medium text-foreground"
+                          ? "text-foreground font-medium"
                           : "text-muted-foreground"
                       }`}
                     >
@@ -132,7 +133,7 @@ export default function Layout({ children }: LayoutProps) {
                         href={item.href}
                         className={`group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline ${
                           pathname === item.href
-                            ? "font-medium text-foreground"
+                            ? "text-foreground font-medium"
                             : "text-muted-foreground"
                         }`}
                       >

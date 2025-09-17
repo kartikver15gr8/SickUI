@@ -91,13 +91,13 @@ export default function HomeLayout({
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <header className="sticky flex items-center top-0 z-50 w-full px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
+    <div className="bg-background flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 flex w-full items-center px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
         <div
-          className={`px-2 my-2 h-[55px] w-full rounded-xl flex items-center justify-between  ${COLORS.headerBorder} bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 `}
+          className={`my-2 flex h-[55px] w-full items-center justify-between rounded-xl px-2 ${COLORS.headerBorder} bg-background/95 supports-[backdrop-filter]:bg-background/60 backdrop-blur`}
         >
-          <div className="flex justify-between md:justify-normal w-full">
-            <Link href="/" className="flex items-center space-x-3 mr-5">
+          <div className="flex w-full justify-between md:justify-normal">
+            <Link href="/" className="mr-5 flex items-center space-x-3">
               <Image
                 className={`h-9 w-9 dark:border ${COLORS.logoBorder} rounded-lg`}
                 src={"/logo/sickui-logo.png"}
@@ -105,16 +105,16 @@ export default function HomeLayout({
                 width={200}
                 height={200}
               />
-              <span className="font-bold sm:inline-block text-[15px] sm:text-[12px] md:text-[14px] lg:text-[15px]">
+              <span className="text-[15px] font-bold sm:inline-block sm:text-[12px] md:text-[14px] lg:text-[15px]">
                 SickUI
               </span>
             </Link>
-            <ul className="hidden md:flex items-center space-x-5 text-[12px] md:text-[14px] lg:text-[15px] font-medium">
+            <ul className="hidden items-center space-x-5 text-[12px] font-medium md:flex md:text-[14px] lg:text-[15px]">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`transition-colors hover:text-foreground/80 ${
+                  className={`hover:text-foreground/80 transition-colors ${
                     isActive(item.href)
                       ? "text-foreground"
                       : "text-foreground/60"
@@ -126,44 +126,35 @@ export default function HomeLayout({
             </ul>
 
             {/* Mobile menu button */}
-            <div className="md:hidden h-9 w-9 ">
+            <div className="h-9 w-9 md:hidden">
               <button
                 aria-label="Toggle menu"
                 aria-expanded={profileTabOpen}
                 onClick={() => {
                   setIsOpen(!isOpen);
                 }}
-                className="flex flex-col justify-center items-center w-9 h-9 focus:outline-none group cursor-pointer"
+                className="group flex h-9 w-9 cursor-pointer flex-col items-center justify-center focus:outline-none"
                 type="button"
               >
                 <span
-                  className={`
-          block h-0.5 w-6 bg-[#959292] rounded transition-all duration-300
-          ${isOpen ? "rotate-45 translate-y-2" : ""}
-        `}
+                  className={`block h-0.5 w-6 rounded bg-[#959292] transition-all duration-300 ${isOpen ? "translate-y-2 rotate-45" : ""} `}
                 />
                 <span
-                  className={`
-          block h-0.5 w-6 bg-[#959292] rounded transition-all duration-300 my-1
-          ${isOpen ? "opacity-0" : ""}
-        `}
+                  className={`my-1 block h-0.5 w-6 rounded bg-[#959292] transition-all duration-300 ${isOpen ? "opacity-0" : ""} `}
                 />
                 <span
-                  className={`
-          block h-0.5 w-6 bg-[#959292] rounded transition-all duration-300
-          ${isOpen ? "-rotate-45 -translate-y-2" : ""}
-        `}
+                  className={`block h-0.5 w-6 rounded bg-[#959292] transition-all duration-300 ${isOpen ? "-translate-y-2 -rotate-45" : ""} `}
                 />
               </button>
             </div>
           </div>
 
           {/* Search box with github and theme toggle buttons */}
-          <div className="hidden md:flex items-start gap-x-2">
+          <div className="hidden items-start gap-x-2 md:flex">
             {/* Search field + buttons wrapper */}
             <div
               onClick={() => setSearchBoxActive(true)}
-              className={`relative ${COLORS.searchBg} flex items-center h-9 w-60 lg:w-72 hover:cursor-pointer rounded-xl ${COLORS.searchBorder} px-2`}
+              className={`relative ${COLORS.searchBg} flex h-9 w-60 items-center rounded-xl hover:cursor-pointer lg:w-72 ${COLORS.searchBorder} px-2`}
             >
               <span
                 className={`${COLORS.textMuted} text-[12px] md:text-[14px] lg:text-[15px]`}
@@ -172,7 +163,7 @@ export default function HomeLayout({
               </span>
 
               {/* Button cluster – absolute-positioned in the top-right */}
-              <div className="absolute right-2 top-0 flex gap-x-1  items-center h-full">
+              <div className="absolute right-2 top-0 flex h-full items-center gap-x-1">
                 <button
                   className={`flex h-5 w-5 items-center justify-center rounded-md ${COLORS.buttonBorder}`}
                 >
@@ -194,7 +185,7 @@ export default function HomeLayout({
             <div className="flex items-center">
               <GitHubStarBtn />
               <span
-                className={`border-[0.4px] h-5 rounded-full ${COLORS.divider}`}
+                className={`h-5 rounded-full border-[0.4px] ${COLORS.divider}`}
               ></span>
 
               <ThemeToggle />
@@ -207,26 +198,26 @@ export default function HomeLayout({
 
       {searchBoxActive && <SearchBox />}
 
-      <main className="flex flex-col flex-1">{children}</main>
+      <main className="flex flex-1 flex-col">{children}</main>
     </div>
   );
 }
 
 function MobileNav({ isOpen }: { isOpen: boolean }) {
   return (
-    <div className="fixed mt-[70px] rounded  w-full z-50 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
+    <div className="fixed z-50 mt-[70px] w-full rounded px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
       <motion.div
-        className=" z-50 relative w-full  bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg rounded-lg"
+        className="bg-background/95 supports-[backdrop-filter]:bg-background/60 relative z-50 w-full rounded-lg shadow-lg backdrop-blur"
         initial="closed"
         animate={isOpen ? "open" : "closed"}
         variants={wrapperVariants}
       >
-        <div className="font-medium border border-[#9DA3AF] dark:border-[#2D2D2D] rounded-lg flex flex-col shadow-[inset_5px_2px_30px_rgba(0,0,0,0.1)]">
+        <div className="flex flex-col rounded-lg border border-[#9DA3AF] font-medium shadow-[inset_5px_2px_30px_rgba(0,0,0,0.1)] dark:border-[#2D2D2D]">
           {navigation.map((elem, key) => {
             return (
               <motion.div
                 variants={itemVariants}
-                className={`h-12 flex items-center p-2 ${
+                className={`flex h-12 items-center p-2 ${
                   key < navigation.length - 1
                     ? "border-b border-[#9DA3AF] dark:border-[#2D2D2D]"
                     : ""

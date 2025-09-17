@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+.turbo/
+
+# Generated files
+.contentlayer/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db

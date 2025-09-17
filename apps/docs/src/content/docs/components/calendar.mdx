@@ -1,0 +1,225 @@
+---
+title: Calendar
+description: A beautiful, animated calendar component for date selection with Framer Motion animations.
+component: true
+---
+
+## Installation
+
+Install via CLI:
+
+```bash
+npx @sickui/cli add calendar
+```
+
+### Manual Installation
+
+If you prefer to install manually, copy and paste the following code into your project.
+
+```bash
+npm install framer-motion lucide-react class-variance-authority clsx tailwind-merge
+```
+
+## Usage
+
+<ComponentPreview name="calendar-default" code={`"use client";
+
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+
+export default function Example() {
+    const [selectedDate, setSelectedDate] = useState<Date>();
+
+    return (
+      <Calendar
+        className="border shadow-sm"
+        selectedDate={selectedDate}
+        onDateSelect={setSelectedDate}
+      />
+    );
+
+}`}>
+
+  <CalendarDefault />
+</ComponentPreview>
+
+## Styling
+
+The Calendar component has no borders or shadows by default. You can add borders, shadows, and custom styling using the `className` prop.
+
+<ComponentPreview name="calendar-variants" code={`"use client";
+
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+
+export default function CalendarVariants() {
+  const [selectedDate, setSelectedDate] = useState<Date>();
+
+return (
+
+<div className="flex flex-wrap gap-6">
+  <div className="space-y-2">
+    <p className="text-sm font-medium">Default (No Border)</p>
+    <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+  </div>
+  <div className="space-y-2">
+    <p className="text-sm font-medium">With Border</p>
+    <Calendar
+      className="border-border border"
+      selectedDate={selectedDate}
+      onDateSelect={setSelectedDate}
+    />
+  </div>
+  <div className="space-y-2">
+    <p className="text-sm font-medium">With Shadow</p>
+    <Calendar
+      className="shadow-lg"
+      selectedDate={selectedDate}
+      onDateSelect={setSelectedDate}
+    />
+  </div>
+  <div className="space-y-2">
+    <p className="text-sm font-medium">Custom Styling</p>
+    <Calendar
+      className="border-primary rounded-xl border-2 shadow-md"
+      selectedDate={selectedDate}
+      onDateSelect={setSelectedDate}
+    />
+  </div>
+</div>
+); }`}>
+
+  <CalendarVariants />
+</ComponentPreview>
+
+## Disabled State
+
+Use the `disabled` prop to disable calendar interactions.
+
+<ComponentPreview name="calendar-disabled" code={`"use client";
+
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+
+export default function CalendarDisabled() {
+  const [selectedDate, setSelectedDate] = useState<Date>();
+
+return (
+
+<div className="flex gap-6">
+  <div className="space-y-2">
+    <p className="text-sm font-medium">Interactive</p>
+    <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+  </div>
+  <div className="space-y-2">
+    <p className="text-sm font-medium">Disabled</p>
+    <Calendar
+      selectedDate={selectedDate}
+      onDateSelect={setSelectedDate}
+      disabled
+    />
+  </div>
+</div>
+); }`}>
+
+  <CalendarDisabled />
+</ComponentPreview>
+
+## Animation Control
+
+Use the `showAnimation` prop to control Framer Motion animations.
+
+<ComponentPreview name="calendar-no-animation" code={`"use client";
+
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+
+export default function CalendarNoAnimation() {
+  const [selectedDate, setSelectedDate] = useState<Date>();
+
+return (
+
+<div className="flex gap-6">
+  <div className="space-y-2">
+    <p className="text-sm font-medium">With Animation</p>
+    <Calendar
+      selectedDate={selectedDate}
+      onDateSelect={setSelectedDate}
+      showAnimation={true}
+    />
+  </div>
+  <div className="space-y-2">
+    <p className="text-sm font-medium">No Animation</p>
+    <Calendar
+      selectedDate={selectedDate}
+      onDateSelect={setSelectedDate}
+      showAnimation={false}
+    />
+  </div>
+</div>
+); }`}>
+
+  <CalendarNoAnimation />
+</ComponentPreview>
+
+## API Reference
+
+### Calendar
+
+| Prop            | Type                                | Default     | Description                                      |
+| --------------- | ----------------------------------- | ----------- | ------------------------------------------------ |
+| `selectedDate`  | `Date \| undefined`                 | `undefined` | The currently selected date                      |
+| `onDateSelect`  | `(date: Date) => void \| undefined` | `undefined` | Callback function called when a date is selected |
+| `disabled`      | `boolean`                           | `false`     | Whether the calendar is disabled                 |
+| `showAnimation` | `boolean`                           | `true`      | Whether to show Framer Motion animations         |
+| `className`     | `string`                            | `undefined` | Additional CSS classes to apply                  |
+
+## Features
+
+### 🎨 **Beautiful Design**
+
+- Clean, modern interface with smooth animations
+- Consistent with your design system using CSS variables
+- No borders or shadows by default, easily customizable with className
+- Month/Year picker popup for quick navigation
+
+### ⚡ **Smooth Animations**
+
+- Built-in Framer Motion animations for delightful interactions
+- Hover and tap animations on date buttons
+- Smooth month transitions
+- Optional animation control with `showAnimation` prop
+
+### ♿ **Accessible**
+
+- Proper keyboard navigation support
+- Screen reader friendly with semantic HTML
+- Focus management and indicators
+- Disabled state properly communicated
+
+### 🔧 **Flexible**
+
+- Controlled component pattern with `selectedDate` and `onDateSelect`
+- Customizable styling with CSS variables
+- TypeScript support with full type safety
+- Easy to integrate with forms and date pickers
+
+## Accessibility
+
+The Calendar component follows accessibility best practices:
+
+- **Keyboard Navigation**: Navigate between dates using arrow keys
+- **Focus Management**: Clear focus indicators and proper focus trapping
+- **Screen Reader Support**: Semantic button elements with proper ARIA attributes
+- **Disabled State**: Properly communicated to assistive technologies
+- **Date Announcements**: Selected dates are properly announced
+
+## Examples in the Wild
+
+Here are some real-world examples of how the Calendar component can be used:
+
+- **Date Pickers** in forms and booking systems
+- **Event Scheduling** interfaces
+- **Dashboard Date Filters** for analytics
+- **Appointment Booking** systems
+- **Content Publishing** date selectors

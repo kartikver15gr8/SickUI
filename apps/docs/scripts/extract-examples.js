@@ -1,32 +1,35 @@
-const fs = require('fs');
-const path = require('path');
-const { parse } = require('@babel/parser');
-const generate = require('@babel/generator').default;
+const fs = require("fs");
+const path = require("path");
+const { parse } = require("@babel/parser");
+const generate = require("@babel/generator").default;
 
 /**
  * Extract code from example files and generate registry
  * This runs at build time to ensure code and examples stay in sync
  */
 
-const EXAMPLES_DIR = path.join(__dirname, '../src/registry');
-const OUTPUT_DIR = path.join(__dirname, '../src/generated');
+const EXAMPLES_DIR = path.join(__dirname, "../src/registry");
+const OUTPUT_DIR = path.join(__dirname, "../src/generated");
 
 function extractExampleCode(filePath) {
-  const content = fs.readFileSync(filePath, 'utf-8');
-  
+  const content = fs.readFileSync(filePath, "utf-8");
+
   // Parse the file to AST
   const ast = parse(content, {
-    sourceType: 'module',
-    plugins: ['typescript', 'jsx'],
+    sourceType: "module",
+    plugins: ["typescript", "jsx"],
   });
 
   const examples = {};
 
   // Extract each exported function
   ast.program.body.forEach((node) => {
-    if (node.type === 'ExportNamedDeclaration' && node.declaration?.type === 'FunctionDeclaration') {
+    if (
+      node.type === "ExportNamedDeclaration" &&
+      node.declaration?.type === "FunctionDeclaration"
+    ) {
       const functionName = node.declaration.id.name;
-      
+
       // Generate clean code for this function
       const functionCode = generate(node, {
         retainLines: false,
@@ -35,9 +38,9 @@ function extractExampleCode(filePath) {
 
       // Add necessary imports
       const imports = ast.program.body
-        .filter(n => n.type === 'ImportDeclaration')
-        .map(n => generate(n).code)
-        .join('\n');
+        .filter((n) => n.type === "ImportDeclaration")
+        .map((n) => generate(n).code)
+        .join("\n");
 
       examples[functionName] = {
         name: functionName,
@@ -55,16 +58,17 @@ function generateRegistry() {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
-  const exampleFiles = fs.readdirSync(EXAMPLES_DIR)
-    .filter(file => file.endsWith('.tsx'))
-    .filter(file => file.includes('-examples'));
+  const exampleFiles = fs
+    .readdirSync(EXAMPLES_DIR)
+    .filter((file) => file.endsWith(".tsx"))
+    .filter((file) => file.includes("-examples"));
 
   const registry = {};
 
-  exampleFiles.forEach(file => {
+  exampleFiles.forEach((file) => {
     const filePath = path.join(EXAMPLES_DIR, file);
-    const componentName = file.replace('-examples.tsx', '');
-    
+    const componentName = file.replace("-examples.tsx", "");
+
     registry[componentName] = extractExampleCode(filePath);
   });
 
@@ -79,14 +83,19 @@ export type ComponentExamples<T extends ExampleName> = typeof EXAMPLES_REGISTRY[
 `;
 
   fs.writeFileSync(
-    path.join(OUTPUT_DIR, 'examples-registry.ts'),
+    path.join(OUTPUT_DIR, "examples-registry.ts"),
     registryContent
   );
 
-  console.log('✅ Examples registry generated successfully');
-  console.log(`📊 Generated ${Object.keys(registry).length} components with ${
-    Object.values(registry).reduce((acc, examples) => acc + Object.keys(examples).length, 0)
-  } examples`);
+  console.log("✅ Examples registry generated successfully");
+  console.log(
+    `📊 Generated ${Object.keys(registry).length} components with ${Object.values(
+      registry
+    ).reduce(
+      (acc, examples) => acc + Object.keys(examples).length,
+      0
+    )} examples`
+  );
 }
 
 if (require.main === module) {

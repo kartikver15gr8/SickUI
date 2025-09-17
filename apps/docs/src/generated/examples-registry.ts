@@ -13,7 +13,7 @@ export function ButtonDefault() {
       component: "ButtonDefault",
     },
     ButtonVariants: {
-      name: "ButtonVariants", 
+      name: "ButtonVariants",
       code: `import { Button } from "@sickui/core";
 
 export function ButtonVariants() {
@@ -84,4 +84,5 @@ export function ButtonLoading() {
 } as const;
 
 export type ExampleName = keyof typeof EXAMPLES_REGISTRY;
-export type ComponentExamples<T extends ExampleName> = typeof EXAMPLES_REGISTRY[T];
+export type ComponentExamples<T extends ExampleName> =
+  (typeof EXAMPLES_REGISTRY)[T];
