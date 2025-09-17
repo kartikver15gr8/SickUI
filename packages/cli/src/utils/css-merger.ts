@@ -128,7 +128,14 @@ export async function smartMergeCSS(
   cssPath: string,
   isTailwindV4: boolean = false
 ): Promise<void> {
-  const existingCSS = await fs.readFile(cssPath, "utf8");
+  let existingCSS = await fs.readFile(cssPath, "utf8");
+
+  // Fix common CSS issues: wrong media query for dark mode
+  existingCSS = existingCSS.replace(
+    /@media \(prefers-color-scheme: light\) \{[\s\S]*?--background: #0a0a0a;/g,
+    (match) =>
+      match.replace("prefers-color-scheme: light", "prefers-color-scheme: dark")
+  );
 
   // Extract existing variables
   const existingVars = extractExistingVariables(existingCSS);
