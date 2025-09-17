@@ -49,9 +49,12 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.4.0",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.323.0",
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {

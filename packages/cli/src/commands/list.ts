@@ -23,10 +23,8 @@ export const list = new Command()
       );
 
       for (const component of components) {
-        logger.info(
-          `${chalk.green("●")} ${chalk.bold(component.name)}`
-        );
-        
+        logger.info(`${chalk.green("●")} ${chalk.bold(component.name)}`);
+
         if (component.dependencies?.length) {
           logger.info(
             `  ${chalk.gray("Dependencies:")} ${component.dependencies.join(", ")}`

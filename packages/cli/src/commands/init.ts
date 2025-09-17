@@ -154,8 +154,8 @@ export async function promptForConfig(
             ? "src/app/globals.css"
             : "src/styles/globals.css"
           : defaultConfig.isAppDir
-          ? "app/globals.css"
-          : "styles/globals.css"
+            ? "app/globals.css"
+            : "styles/globals.css"
         : "src/index.css",
       baseColor: options.baseColor ?? "slate",
       cssVariables: options.cssVariables ?? true,

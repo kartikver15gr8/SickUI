@@ -2,6 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* MDX Styles */
+.mdx {
+  @apply max-w-none;
+}
+
+.mdx [data-rehype-pretty-code-fragment] {
+  @apply relative;
+}
+
+.mdx [data-rehype-pretty-code-fragment] pre {
+  @apply bg-muted border px-4 py-3 text-sm;
+}
+
+.mdx [data-rehype-pretty-code-title] {
+  @apply bg-muted rounded-t-lg border border-b-0 px-4 py-2 text-sm font-medium;
+}
+
+.mdx [data-rehype-pretty-code-title] + pre {
+  @apply mt-0 rounded-t-none;
+}
+
+.mdx [data-rehype-pretty-code-fragment] .line--highlighted {
+  @apply bg-muted-foreground/10 border-l-accent-foreground border-l-2 pl-4;
+}
+
+.mdx [data-rehype-pretty-code-fragment] .word--highlighted {
+  @apply bg-muted-foreground/10 rounded-sm p-1;
+}
+
+.mdx .subheading-anchor {
+  @apply absolute -ml-8 mt-1 flex h-5 w-8 items-center justify-center rounded-md no-underline opacity-0 shadow-sm ring-1 ring-slate-900/5 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:bg-slate-700 dark:text-slate-300 dark:shadow-none dark:ring-0;
+}
+
+.mdx .subheading-anchor:after {
+  @apply text-xs;
+  content: "#";
+}
+
+.mdx *:hover > .subheading-anchor {
+  @apply opacity-100;
+}
+
+/* Steps component */
+.mdx .steps {
+  counter-reset: step;
+}
+
+.mdx .steps > h3 {
+  counter-increment: step;
+  @apply relative pl-10;
+}
+
+.mdx .steps > h3:before {
+  @apply bg-primary text-primary-foreground absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold;
+  content: counter(step);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -57,7 +114,6 @@
     @apply bg-background text-foreground;
   }
 }
-
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

@@ -1,0 +1,150 @@
+---
+title: Button
+description: Displays a button or a component that looks like a button.
+component: true
+---
+
+## Installation
+
+Install via CLI:
+
+```bash
+npx @sickui/cli add button
+```
+
+### Manual Installation
+
+If you prefer to install manually, copy and paste the following code into your project.
+
+```bash
+npm install @radix-ui/react-slot class-variance-authority clsx tailwind-merge
+```
+
+## Usage
+
+<ComponentPreview name="button-default" code={`import { Button } from "@/components/ui/button";
+
+export default function Example() {
+  return <Button>Button</Button>;
+}`}>
+  <ButtonDefault />
+</ComponentPreview>
+
+## Variants
+
+Use the `variant` prop to change the visual style of the Button.
+
+<ComponentPreview name="button-variants" code={`import { Button } from "@/components/ui/button";
+
+export default function ButtonVariants() {
+  return (
+    <div className="flex flex-wrap gap-4">
+      <Button variant="default">Default</Button>
+      <Button variant="destructive">Destructive</Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="link">Link</Button>
+    </div>
+  );
+}`}>
+  <ButtonVariants />
+</ComponentPreview>
+
+## Sizes
+
+Use the `size` prop to change the size of the Button.
+
+<ComponentPreview name="button-sizes" code={`import { Button } from "@/components/ui/button";
+
+export default function ButtonSizes() {
+  return (
+    <div className="flex items-center gap-4">
+      <Button size="sm">Small</Button>
+      <Button size="default">Default</Button>
+      <Button size="lg">Large</Button>
+      <Button size="icon">🎉</Button>
+    </div>
+  );
+}`}>
+  <ButtonSizes />
+</ComponentPreview>
+
+## Loading State
+
+Use the `disabled` prop with a loading spinner for async actions.
+
+<ComponentPreview name="button-loading" code={`import { Button } from "@/components/ui/button";
+
+export default function ButtonLoading() {
+  return (
+    <div className="flex gap-4">
+      <Button disabled>
+        <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+            fill="none"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+        Loading...
+      </Button>
+      <Button variant="outline" disabled>
+        Please wait
+      </Button>
+    </div>
+  );
+}`}>
+  <ButtonLoading />
+</ComponentPreview>
+
+## Examples
+
+### Variants
+
+You can use the `variant` prop to create different button styles.
+
+### Sizes
+
+Use the `size` prop to create buttons of different sizes.
+
+### Loading State
+
+You can show a loading state by disabling the button and adding a loading spinner.
+
+## API Reference
+
+### Button
+
+| Prop      | Type                                                                          | Default     | Description                                                       |
+| --------- | ----------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------- |
+| `variant` | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link"` | `"default"` | The variant of the button                                         |
+| `size`    | `"default" \| "sm" \| "lg" \| "icon"`                                         | `"default"` | The size of the button                                            |
+| `asChild` | `boolean`                                                                     | `false`     | Change the default rendered element for the one passed as a child |
+
+## Accessibility
+
+The Button component is built on top of the native `button` element and includes:
+
+- **Keyboard navigation**: Supports `Enter` and `Space` key activation
+- **Focus management**: Proper focus indicators and focus trapping
+- **Screen reader support**: Semantic button element with proper ARIA attributes
+- **Disabled state**: Properly communicated to assistive technologies
+
+## Examples in the Wild
+
+Here are some real-world examples of how the Button component is used:
+
+- **Call-to-action buttons** in hero sections
+- **Form submission buttons** in contact forms
+- **Navigation buttons** in pagination components
+- **Action buttons** in data tables and cards

@@ -1,30 +1,31 @@
-import Link from "next/link";
 import { Button } from "@sickui/core";
-import { ArrowRight, Terminal, Copy, Palette, Code } from "lucide-react";
+import { ArrowRight, Code, Copy, Palette, Terminal } from "lucide-react";
+import Link from "next/link";
 import { CodeBlock } from "../components/code-block";
+import FooterLayout from "../components/footer/footer-layout";
 import HomeLayout from "../components/navbar/home-layout";
 
 export default function Home() {
   return (
     <HomeLayout>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex min-h-screen flex-col">
         {/* Hero Section */}
-        <section className="flex-1 flex items-center justify-center px-4 py-16 md:py-24">
-          <div className="max-w-6xl mx-auto text-center space-y-12">
+        <section className="flex flex-1 items-center justify-center px-4 py-16 md:py-24">
+          <div className="mx-auto max-w-6xl space-y-12 text-center">
             <div className="space-y-6">
-              <h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl">
                 SickUI
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
                 Beautifully designed components that you can copy and paste into
                 your apps. Accessible. Customizable. Open Source.
               </p>
             </div>
 
             {/* CLI Demo */}
-            <div className="max-w-2xl mx-auto space-y-4">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                <Terminal className="w-4 h-4" />
+            <div className="mx-auto max-w-2xl space-y-4">
+              <div className="text-muted-foreground mb-4 flex items-center gap-2 text-sm">
+                <Terminal className="h-4 w-4" />
                 <span>Get started in seconds</span>
               </div>
 
@@ -40,16 +41,16 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link href="/docs/installation">
                 <Button size="lg" className="gap-2">
                   Get Started
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/docs/components">
                 <Button variant="outline" size="lg" className="gap-2">
-                  <Code className="w-4 h-4" />
+                  <Code className="h-4 w-4" />
                   Browse Components
                 </Button>
               </Link>
@@ -58,9 +59,9 @@ export default function Home() {
         </section>
 
         {/* Features */}
-        <section className="py-16 bg-muted/50">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12">
+        <section className="bg-muted/50 py-16">
+          <div className="mx-auto max-w-6xl px-4">
+            <div className="mb-12 text-center">
               <h2 className="text-3xl font-bold tracking-tight">Why SickUI?</h2>
               <p className="text-muted-foreground mt-4">
                 Copy, paste, own. The simplest way to add components to your
@@ -68,10 +69,10 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center space-y-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto">
-                  <Copy className="w-6 h-6 text-blue-600" />
+            <div className="grid gap-8 md:grid-cols-3">
+              <div className="space-y-4 text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                  <Copy className="h-6 w-6 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold">Copy & Paste</h3>
                 <p className="text-muted-foreground">
@@ -80,9 +81,9 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="text-center space-y-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto">
-                  <Palette className="w-6 h-6 text-purple-600" />
+              <div className="space-y-4 text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
+                  <Palette className="h-6 w-6 text-purple-600" />
                 </div>
                 <h3 className="text-xl font-semibold">Fully Customizable</h3>
                 <p className="text-muted-foreground">
@@ -91,9 +92,9 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="text-center space-y-4">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto">
-                  <Terminal className="w-6 h-6 text-green-600" />
+              <div className="space-y-4 text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
+                  <Terminal className="h-6 w-6 text-green-600" />
                 </div>
                 <h3 className="text-xl font-semibold">CLI Powered</h3>
                 <p className="text-muted-foreground">
@@ -107,9 +108,9 @@ export default function Home() {
 
         {/* Component Preview */}
         <section className="py-16">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tight mb-4">
+          <div className="mx-auto max-w-6xl px-4">
+            <div className="mb-12 text-center">
+              <h2 className="mb-4 text-3xl font-bold tracking-tight">
                 Built with Modern Stack
               </h2>
               <p className="text-muted-foreground">
@@ -118,16 +119,16 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div className="grid items-center gap-8 lg:grid-cols-2">
               {/* Component Demo */}
-              <div className="bg-card border rounded-lg p-8 shadow-sm">
+              <div className="bg-card rounded-lg border p-8 shadow-sm">
                 <div className="space-y-4">
-                  <div className="flex flex-wrap gap-3 justify-center">
+                  <div className="flex flex-wrap justify-center gap-3">
                     <Button>Default</Button>
                     <Button variant="secondary">Secondary</Button>
                     <Button variant="outline">Outline</Button>
                   </div>
-                  <div className="flex flex-wrap gap-3 justify-center">
+                  <div className="flex flex-wrap justify-center gap-3">
                     <Button variant="ghost">Ghost</Button>
                     <Button variant="destructive">Destructive</Button>
                     <Button size="sm">Small</Button>
@@ -139,7 +140,7 @@ export default function Home() {
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold">Add to your project</h3>
                 <CodeBlock code="npx @sickui/cli add button" showCopy={true} />
-                <div className="text-sm text-muted-foreground">
+                <div className="text-muted-foreground text-sm">
                   <p>Then use in your components:</p>
                 </div>
                 <CodeBlock
@@ -154,17 +155,18 @@ export function MyComponent() {
               </div>
             </div>
 
-            <div className="text-center mt-12">
+            <div className="mt-12 text-center">
               <Link href="/docs/components">
                 <Button variant="outline" size="lg">
                   Browse All Components
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
           </div>
         </section>
       </div>
+      <FooterLayout />
     </HomeLayout>
   );
 }

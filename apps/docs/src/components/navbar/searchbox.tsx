@@ -35,18 +35,18 @@ export default function SearchBox() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div
-        className={`w-full max-h-[50%] max-w-xl rounded-2xl ${BORDER_COLORS.parentBoxBorder} bg-background p-2 shadow-xl`}
+        className={`max-h-[50%] w-full max-w-xl rounded-2xl ${BORDER_COLORS.parentBoxBorder} bg-background p-2 shadow-xl`}
       >
         <input
-          className={`w-full h-12 rounded-xl p-2 border-4 outline-none ${BORDER_COLORS.searchBoxBorder} ${BORDER_COLORS.searchBoxBg} xl:text-lg`}
+          className={`h-12 w-full rounded-xl border-4 p-2 outline-none ${BORDER_COLORS.searchBoxBorder} ${BORDER_COLORS.searchBoxBg} xl:text-lg`}
           type="text"
           placeholder="Search"
           onChange={(e) => setSearchKey(e.target.value)}
         />
         <div
-          className={`h-52 overflow-y-auto scrollbar-hide ${BORDER_COLORS.searchResultParentBorder} rounded-[12px] mt-2`}
+          className={`scrollbar-hide h-52 overflow-y-auto ${BORDER_COLORS.searchResultParentBorder} mt-2 rounded-[12px]`}
         >
-          <span className={`flex pl-2 mt-2 text-sm text-[#787879]`}>
+          <span className={`mt-2 flex pl-2 text-sm text-[#787879]`}>
             Explore pages
           </span>
           {searchKeyArray.map((elem, key) => {
@@ -54,7 +54,7 @@ export default function SearchBox() {
               <SearchOption key={key} href={elem.href} title={elem.title} />
             );
           })}
-          <span className={`pl-2 flex mt-2 text-sm text-[#787879]`}>
+          <span className={`mt-2 flex pl-2 text-sm text-[#787879]`}>
             Components
           </span>
           {searchKeyCompArray.map((elem, key) => {
@@ -72,7 +72,7 @@ function SearchOption({ href, title }: { href: string; title: string }) {
   return (
     <Link
       href={href ? href : ""}
-      className={`flex items-center justify-between p-2 rounded-lg ${BORDER_COLORS.searchResultOptionBg}`}
+      className={`flex items-center justify-between rounded-lg p-2 ${BORDER_COLORS.searchResultOptionBg}`}
     >
       <p>{title}</p>
     </Link>
