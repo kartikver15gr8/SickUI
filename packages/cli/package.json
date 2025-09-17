@@ -1,6 +1,6 @@
 {
   "name": "@sickui/cli",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "CLI for adding SickUI components to your project",
   "keywords": [
     "react",

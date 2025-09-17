@@ -23,12 +23,6 @@ const PROJECT_DEPENDENCIES = [
   "tailwind-merge",
 ];
 
-const TAILWIND_DEPENDENCIES = [
-  "tailwindcss@latest",
-  "postcss@latest",
-  "autoprefixer@latest",
-];
-
 const TAILWIND_V4_DEPENDENCIES = [
   "tailwindcss@latest",
   "postcss@latest",
@@ -182,8 +176,8 @@ export async function runInit(cwd: string, config: any, projectInfo: any) {
   logger.info("Installing dependencies...");
   const packageManager = await getPackageManager(cwd);
 
-  // Determine which dependencies to install based on Tailwind version
-  const dependenciesToInstall = await getTailwindDependencies(cwd);
+  // Always install Tailwind v4 dependencies since we're installing latest
+  const dependenciesToInstall = TAILWIND_V4_DEPENDENCIES;
 
   // Install Tailwind and PostCSS dependencies first
   await execa(
@@ -500,36 +494,6 @@ async function ensureCSSFile(
       isTailwindV4 ? "(v4 compatible)" : "(v3 compatible)"
     }`
   );
-}
-
-async function getTailwindDependencies(cwd: string): Promise<string[]> {
-  const packageJsonPath = path.resolve(cwd, "package.json");
-
-  if (!existsSync(packageJsonPath)) {
-    return TAILWIND_DEPENDENCIES;
-  }
-
-  try {
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf8"));
-    const dependencies = {
-      ...packageJson.dependencies,
-      ...packageJson.devDependencies,
-    };
-
-    if (dependencies.tailwindcss) {
-      const version = dependencies.tailwindcss.replace(/[^\d.]/g, "");
-      const majorVersion = parseInt(version.split(".")[0]);
-
-      // Use new dependencies for Tailwind v4+
-      if (majorVersion >= 4) {
-        return TAILWIND_V4_DEPENDENCIES;
-      }
-    }
-  } catch (error) {
-    // Fall back to legacy dependencies if we can't read package.json
-  }
-
-  return TAILWIND_DEPENDENCIES;
 }
 
 async function isTailwindVersion4(cwd: string): Promise<boolean> {
