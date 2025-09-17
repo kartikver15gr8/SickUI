@@ -144,7 +144,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
 
         {/* Month/Year Picker Popup */}
         {showMonthYearPicker && (
-          <div className="bg-card border-border absolute left-0 right-0 top-0 z-20 rounded-lg border p-4 shadow-lg">
+          <div className="bg-background border-border absolute left-0 right-0 top-0 z-20 rounded-lg border p-4 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-foreground font-semibold">
                 Select Month & Year
