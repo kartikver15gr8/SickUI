@@ -153,35 +153,34 @@ export const GLOBALS_CSS_TEMPLATE = `/*
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 0 0% 2.4%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 0 0% 2.4%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 0 0% 2.4%;
     --popover-foreground: 210 40% 98%;
     --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
-    --secondary: 217.2 32.6% 17.5%;
+    --primary-foreground: 0 0% 2.4%;
+    --secondary: 0 0% 8%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 0 0% 8%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 0 0% 8%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 0 0% 8%;
+    --input: 0 0% 8%;
     --ring: 224.3 76.3% 94.1%;
   }
 }
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    @apply bg-background text-foreground;
   }
 }`;
 
@@ -221,24 +220,24 @@ export const GLOBALS_CSS_V4_TEMPLATE = `/*
 
 @media (prefers-color-scheme: dark) {
   @theme {
-    --color-background: 222.2 84% 4.9%;
+    --color-background: 0 0% 2.4%;
     --color-foreground: 210 40% 98%;
-    --color-card: 222.2 84% 4.9%;
+    --color-card: 0 0% 2.4%;
     --color-card-foreground: 210 40% 98%;
-    --color-popover: 222.2 84% 4.9%;
+    --color-popover: 0 0% 2.4%;
     --color-popover-foreground: 210 40% 98%;
     --color-primary: 217.2 91.2% 59.8%;
-    --color-primary-foreground: 222.2 84% 4.9%;
-    --color-secondary: 217.2 32.6% 17.5%;
+    --color-primary-foreground: 0 0% 2.4%;
+    --color-secondary: 0 0% 8%;
     --color-secondary-foreground: 210 40% 98%;
-    --color-muted: 217.2 32.6% 17.5%;
+    --color-muted: 0 0% 8%;
     --color-muted-foreground: 215 20.2% 65.1%;
-    --color-accent: 217.2 32.6% 17.5%;
+    --color-accent: 0 0% 8%;
     --color-accent-foreground: 210 40% 98%;
     --color-destructive: 0 62.8% 30.6%;
     --color-destructive-foreground: 210 40% 98%;
-    --color-border: 217.2 32.6% 17.5%;
-    --color-input: 217.2 32.6% 17.5%;
+    --color-border: 0 0% 8%;
+    --color-input: 0 0% 8%;
     --color-ring: 224.3 76.3% 94.1%;
   }
 }
@@ -267,11 +266,11 @@ export const GLOBALS_CSS_V4_TEMPLATE = `/*
 }
 
 /* Base Styles */
-* {
-  border-color: hsl(var(--border));
-}
-
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }`;

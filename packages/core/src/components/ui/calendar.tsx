@@ -90,8 +90,8 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       <CalendarWrapper
         ref={ref}
         className={cn(calendarVariants(), "relative", className)}
-        {...(animationProps as any)}
-        {...props}
+        {...animationProps}
+        {...(props as any)}
       >
         {/* Header with navigation */}
         <div className="mb-4 flex items-center justify-between">
@@ -170,7 +170,9 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
-              <span className="text-lg font-semibold">{year}</span>
+              <span className="text-foreground text-lg font-semibold">
+                {year}
+              </span>
               <button
                 onClick={() =>
                   setCurrentMonth(
@@ -204,8 +206,8 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                     className={cn(
                       "rounded-lg p-2 text-sm transition-colors",
                       isCurrentMonth
-                        ? "text-primary-foreground bg-black dark:bg-white"
-                        : "hover:bg-accent hover:text-accent-foreground"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-foreground hover:bg-accent hover:text-accent-foreground"
                     )}
                   >
                     {monthName}
@@ -217,7 +219,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
             {/* Close Button */}
             <button
               onClick={() => setShowMonthYearPicker(false)}
-              className="text-primary-foreground w-full rounded-lg bg-black p-2 transition-colors hover:bg-black/80 dark:bg-white dark:hover:bg-white/80"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg p-2 transition-colors"
             >
               Done
             </button>
@@ -259,9 +261,9 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                       "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
                       disabled && "cursor-not-allowed opacity-50",
                       isSelected
-                        ? "bg-black text-white dark:bg-white dark:text-black"
+                        ? "bg-primary text-primary-foreground"
                         : isToday
-                          ? "border border-black text-black dark:border-white dark:text-white"
+                          ? "border-primary text-primary border"
                           : "text-foreground hover:bg-accent hover:text-accent-foreground"
                     )}
                   >

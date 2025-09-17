@@ -10,6 +10,8 @@ import { promises as fs } from "fs";
 
 // Required SickUI variables for components to work
 const REQUIRED_SICKUI_VARIABLES = [
+  "--background",
+  "--foreground",
   "--primary",
   "--primary-foreground",
   "--secondary",
@@ -27,47 +29,55 @@ const REQUIRED_SICKUI_VARIABLES = [
   "--card-foreground",
   "--popover",
   "--popover-foreground",
+  "--radius",
 ];
 
-// SickUI variable values
+// SickUI variable values (HSL format to match templates)
 const SICKUI_LIGHT_VALUES: Record<string, string> = {
-  "--primary": "#3b82f6",
-  "--primary-foreground": "#f8fafc",
-  "--secondary": "#f1f5f9",
-  "--secondary-foreground": "#0f172a",
-  "--muted": "#f1f5f9",
-  "--muted-foreground": "#64748b",
-  "--accent": "#f1f5f9",
-  "--accent-foreground": "#0f172a",
-  "--destructive": "#ef4444",
-  "--destructive-foreground": "#f8fafc",
-  "--border": "#e2e8f0",
-  "--input": "#e2e8f0",
-  "--ring": "#3b82f6",
-  "--card": "#ffffff",
-  "--card-foreground": "#0f172a",
-  "--popover": "#ffffff",
-  "--popover-foreground": "#0f172a",
+  "--background": "0 0% 100%",
+  "--foreground": "222.2 84% 4.9%",
+  "--primary": "221.2 83.2% 53.3%",
+  "--primary-foreground": "210 40% 98%",
+  "--secondary": "210 40% 96%",
+  "--secondary-foreground": "222.2 84% 4.9%",
+  "--muted": "210 40% 96%",
+  "--muted-foreground": "215.4 16.3% 46.9%",
+  "--accent": "210 40% 96%",
+  "--accent-foreground": "222.2 84% 4.9%",
+  "--destructive": "0 84.2% 60.2%",
+  "--destructive-foreground": "210 40% 98%",
+  "--border": "214.3 31.8% 91.4%",
+  "--input": "214.3 31.8% 91.4%",
+  "--ring": "221.2 83.2% 53.3%",
+  "--card": "0 0% 100%",
+  "--card-foreground": "222.2 84% 4.9%",
+  "--popover": "0 0% 100%",
+  "--popover-foreground": "222.2 84% 4.9%",
+  "--radius": "0.5rem",
 };
 
+// Dark mode values for SickUI components (updated to match docs website)
 const SICKUI_DARK_VALUES: Record<string, string> = {
-  "--primary": "#60a5fa",
-  "--primary-foreground": "#0f172a",
-  "--secondary": "#1e293b",
-  "--secondary-foreground": "#f8fafc",
-  "--muted": "#1e293b",
-  "--muted-foreground": "#94a3b8",
-  "--accent": "#1e293b",
-  "--accent-foreground": "#f8fafc",
-  "--destructive": "#dc2626",
-  "--destructive-foreground": "#f8fafc",
-  "--border": "#1e293b",
-  "--input": "#1e293b",
-  "--ring": "#94a3b8",
-  "--card": "#0f172a",
-  "--card-foreground": "#f8fafc",
-  "--popover": "#0f172a",
-  "--popover-foreground": "#f8fafc",
+  "--background": "0 0% 2.4%",
+  "--foreground": "210 40% 98%",
+  "--primary": "217.2 91.2% 59.8%",
+  "--primary-foreground": "0 0% 2.4%",
+  "--secondary": "0 0% 8%",
+  "--secondary-foreground": "210 40% 98%",
+  "--muted": "0 0% 8%",
+  "--muted-foreground": "215 20.2% 65.1%",
+  "--accent": "0 0% 8%",
+  "--accent-foreground": "210 40% 98%",
+  "--destructive": "0 62.8% 30.6%",
+  "--destructive-foreground": "210 40% 98%",
+  "--border": "0 0% 8%",
+  "--input": "0 0% 8%",
+  "--ring": "224.3 76.3% 94.1%",
+  "--card": "0 0% 2.4%",
+  "--card-foreground": "210 40% 98%",
+  "--popover": "0 0% 2.4%",
+  "--popover-foreground": "210 40% 98%",
+  "--radius": "0.5rem",
 };
 
 /**
@@ -100,7 +110,14 @@ function getMissingVariables(existingVars: string[]): string[] {
 function formatVariables(variables: string[], isDark: boolean = false): string {
   const values = isDark ? SICKUI_DARK_VALUES : SICKUI_LIGHT_VALUES;
   return variables
-    .map((variable) => `  ${variable}: ${values[variable]};`)
+    .map((variable) => {
+      const value = values[variable];
+      // For radius, use the value directly, for colors wrap in hsl()
+      if (variable === "--radius") {
+        return `  ${variable}: ${value};`;
+      }
+      return `  ${variable}: ${value};`;
+    })
     .join("\n");
 }
 
@@ -136,12 +153,13 @@ export async function smartMergeCSS(
 
       if (match) {
         const themeVars = missingVars
-          .map(
-            (variable) =>
-              `  --color-${variable.slice(2)}: ${
-                SICKUI_LIGHT_VALUES[variable]
-              };`
-          )
+          .map((variable) => {
+            const value = SICKUI_LIGHT_VALUES[variable];
+            if (variable === "--radius") {
+              return `  ${variable}: ${value};`;
+            }
+            return `  --color-${variable.slice(2)}: ${value};`;
+          })
           .join("\n");
 
         const updatedThemeContent =
@@ -153,15 +171,40 @@ export async function smartMergeCSS(
 
         // Also add legacy CSS variables for component compatibility
         const legacyVars = missingVars
-          .map(
-            (variable) => `  ${variable}: var(--color-${variable.slice(2)});`
-          )
+          .map((variable) => {
+            if (variable === "--radius") {
+              return `  ${variable}: ${SICKUI_LIGHT_VALUES[variable]};`;
+            }
+            return `  ${variable}: var(--color-${variable.slice(2)});`;
+          })
           .join("\n");
 
         appendContent =
           "\n\n/* SickUI CSS Variables for Component Compatibility */\n:root {\n" +
           legacyVars +
           "\n}";
+
+        // Add dark mode variables to the updated CSS
+        const darkModeVars = missingVars
+          .map((variable) => {
+            const value = SICKUI_DARK_VALUES[variable];
+            if (variable === "--radius") {
+              return `    ${variable}: ${value};`;
+            }
+            return `    --color-${variable.slice(2)}: ${value};`;
+          })
+          .join("\n");
+
+        appendContent += `
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+${darkModeVars}
+  }
+  :root {
+${formatVariables(missingVars, true).replace(/^/gm, "    ")}
+  }
+}`;
 
         await fs.writeFile(cssPath, updatedCSS + appendContent, "utf8");
         return;
@@ -170,10 +213,13 @@ export async function smartMergeCSS(
       // Create new @theme block
       appendContent += "\n\n/* SickUI Theme Variables */\n@theme {\n";
       appendContent += missingVars
-        .map(
-          (variable) =>
-            `  --color-${variable.slice(2)}: ${SICKUI_LIGHT_VALUES[variable]};`
-        )
+        .map((variable) => {
+          const value = SICKUI_LIGHT_VALUES[variable];
+          if (variable === "--radius") {
+            return `  ${variable}: ${value};`;
+          }
+          return `  --color-${variable.slice(2)}: ${value};`;
+        })
         .join("\n");
       appendContent += "\n}\n";
 
@@ -190,19 +236,19 @@ export async function smartMergeCSS(
     appendContent += "\n}";
   }
 
-  // Add dark mode variables if they don't exist
-  const hasDarkMode =
-    existingCSS.includes("prefers-color-scheme: dark") ||
-    existingCSS.includes(".dark");
-  if (!hasDarkMode && missingVars.length > 0) {
+  // Always add dark mode variables for SickUI components
+  if (missingVars.length > 0) {
     if (isTailwindV4) {
       appendContent +=
         "\n\n@media (prefers-color-scheme: dark) {\n  @theme {\n";
       appendContent += missingVars
-        .map(
-          (variable) =>
-            `    --color-${variable.slice(2)}: ${SICKUI_DARK_VALUES[variable]};`
-        )
+        .map((variable) => {
+          const value = SICKUI_DARK_VALUES[variable];
+          if (variable === "--radius") {
+            return `    ${variable}: ${value};`;
+          }
+          return `    --color-${variable.slice(2)}: ${value};`;
+        })
         .join("\n");
       appendContent += "\n  }\n  :root {\n";
       appendContent += formatVariables(missingVars, true).replace(
@@ -215,6 +261,23 @@ export async function smartMergeCSS(
       appendContent += formatVariables(missingVars, true).replace(/^/gm, "  ");
       appendContent += "\n  }\n}";
     }
+  }
+
+  // Add essential base styles for SickUI components if not present
+  const hasBaseStyles = existingCSS.includes("@apply border-border");
+
+  if (!hasBaseStyles && missingVars.length > 0) {
+    appendContent += `
+
+/* SickUI Base Styles - Essential for component styling */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}`;
   }
 
   // Write the updated CSS
