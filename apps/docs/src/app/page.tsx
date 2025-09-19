@@ -13,7 +13,7 @@ export default function Home() {
         <section className="flex flex-1 items-center justify-center px-4 py-16 md:py-24">
           <div className="mx-auto max-w-6xl space-y-12 text-center">
             <div className="space-y-6">
-              <h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl">
+              <h1 className="text-4xl font-bold sm:text-6xl xl:text-7xl">
                 SickUI
               </h1>
               <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
