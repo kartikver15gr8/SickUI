@@ -12,11 +12,11 @@
 }
 
 .mdx [data-rehype-pretty-code-fragment] pre {
-  @apply bg-muted border px-4 py-3 text-sm;
+  @apply bg-muted w-full max-w-full overflow-x-auto border px-3 py-3 text-xs sm:px-4 sm:text-sm;
 }
 
 .mdx [data-rehype-pretty-code-title] {
-  @apply bg-muted rounded-t-lg border border-b-0 px-4 py-2 text-sm font-medium;
+  @apply bg-muted rounded-t-lg border border-b-0 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm;
 }
 
 .mdx [data-rehype-pretty-code-title] + pre {
@@ -122,4 +122,96 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Mobile-responsive code blocks */
+@media (max-width: 640px) {
+  pre {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.75rem !important;
+    padding: 0.75rem !important;
+    line-height: 1.4 !important;
+  }
+
+  code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Ensure syntax highlighter containers don't overflow */
+  .syntax-highlighter-container,
+  .syntax-highlighter-container > div,
+  .syntax-highlighter-container pre {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* MDX code blocks on mobile */
+  .mdx pre {
+    font-size: 0.75rem !important;
+    padding: 0.75rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .mdx code {
+    font-size: 0.75rem !important;
+  }
+
+  /* Component preview adjustments */
+  .component-preview-container {
+    padding: 1rem !important;
+  }
+}
+
+/* Ensure all code containers are properly constrained */
+.mdx pre,
+.mdx code,
+[class*="language-"] {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* Fix for react-syntax-highlighter on mobile */
+@media (max-width: 640px) {
+  [class*="language-"] {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+  }
+}
+
+/* Prevent horizontal overflow on mobile */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Ensure all content containers respect mobile boundaries */
+  main,
+  article,
+  section,
+  div {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  /* Force all potentially wide elements to be contained */
+  table,
+  img,
+  video,
+  iframe,
+  embed,
+  object {
+    max-width: 100% !important;
+    height: auto !important;
+  }
 }
