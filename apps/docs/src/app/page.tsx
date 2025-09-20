@@ -4,14 +4,38 @@ import Link from "next/link";
 import { CodeBlock } from "../components/code-block";
 import FooterLayout from "../components/footer/footer-layout";
 import HomeLayout from "../components/navbar/home-layout";
+import { GrainGradient } from "@paper-design/shaders-react";
 
 export default function Home() {
   return (
     <HomeLayout>
       <div className="flex min-h-screen flex-col">
+        
         {/* Hero Section */}
+        <div className="relative rounded-2xl mx-5 border border-white/10 overflow-clip">
+          <GrainGradient
+            style={{ height: "100%", width: "100%", position: "absolute", zIndex: 0 }}
+            colorBack="hsl(0, 0%, 5%)"
+            softness={0.5}
+            className="opacity-90 hidden dark:flex"
+            intensity={0.27}
+            noise={0.3}
+            shape="corners"
+            offsetX={0}
+            offsetY={0}
+            scale={1}
+            rotation={0}
+            speed={1}
+            colors={[
+              "hsl(218, 100%, 50%)",
+              "hsl(212, 100%, 83%)",
+              "hsl(195, 100%, 50%)",
+              "hsl(250, 100%, 50%)",
+            ]}
+          />
+        
         <section className="flex flex-1 items-center justify-center px-4 py-16 md:py-24">
-          <div className="mx-auto max-w-6xl space-y-12 text-center">
+          <div className="mx-auto max-w-6xl space-y-12 text-center z-50">
             <div className="space-y-6">
               <h1 className="text-4xl font-bold sm:text-6xl xl:text-7xl">
                 SickUI
@@ -49,7 +73,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/docs/components">
-                <Button variant="outline" size="lg" className="gap-2">
+                <Button variant="outline" size="lg" className="gap-2 bg-black text-neutral-50 dark:bg-white/80 dark:text-neutral-950">
                   <Code className="h-4 w-4" />
                   Browse Components
                 </Button>
@@ -57,7 +81,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-
+        </div>
         {/* Features */}
         <section className="bg-muted/50 py-16">
           <div className="mx-auto max-w-6xl px-4">

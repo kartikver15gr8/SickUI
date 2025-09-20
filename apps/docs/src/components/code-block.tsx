@@ -38,7 +38,7 @@ export function CodeBlock({
         </div>
       )}
       <div className="relative">
-        <div className="overflow-hidden rounded-b-lg">
+        <div className="overflow-hidden bg-neutral-50 dark:bg-neutral-900 rounded-b-lg">
           <CodeHighlighter code={code} language={language} className="" />
         </div>
         {showCopy && (

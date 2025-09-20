@@ -56,6 +56,9 @@ importers:
       '@next/mdx':
         specifier: ^15.5.3
         version: 15.5.3(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1)
+      '@paper-design/shaders-react':
+        specifier: ^0.0.54
+        version: 0.0.54(@types/react@18.3.24)(react@18.3.1)
       '@sickui/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -1723,6 +1726,24 @@ packages:
   /@opentelemetry/semantic-conventions@1.37.0:
     resolution: {integrity: sha512-JD6DerIKdJGmRp4jQyX5FlrQjA4tjOw1cvfsPAZXfOOEErMUHjPcPSICS+6WnM0nB0efSFARh0KAZss+bvExOA==}
     engines: {node: '>=14'}
+    dev: false
+
+  /@paper-design/shaders-react@0.0.54(@types/react@18.3.24)(react@18.3.1):
+    resolution: {integrity: sha512-yO4uJBZdWl9xAtfrHQQoDmfvJ0mkuxqB4tclSdZqS3X3dkLKYnzNxrpo/ZiNA0hkLcUXssCDQ8sB2dZO/m6Pww==}
+    peerDependencies:
+      '@types/react': ^18 || ^19
+      react: ^18 || ^19
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@paper-design/shaders': 0.0.54
+      '@types/react': 18.3.24
+      react: 18.3.1
+    dev: false
+
+  /@paper-design/shaders@0.0.54:
+    resolution: {integrity: sha512-SYuWGPhyfxy0E/kquCmZ30aY96UyVmsIiqXEzQhwy1AdeIRbYkEjcPj6Eu9US7p0n/pOQOhINxIR1moKx3XNLQ==}
     dev: false
 
   /@pkgjs/parseargs@0.11.0:
