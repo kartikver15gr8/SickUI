@@ -148,7 +148,9 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* Main content for docs */}
           <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
-            <div className="mx-auto w-full min-w-0">{children}</div>
+            <div className="mx-auto w-full min-w-0 max-w-full overflow-hidden px-4 sm:px-6">
+              {children}
+            </div>
           </main>
         </div>
       ) : (

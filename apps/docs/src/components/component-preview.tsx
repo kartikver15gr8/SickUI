@@ -33,32 +33,32 @@ export function ComponentPreview({
   };
 
   return (
-    <div className="relative my-4 flex flex-col space-y-2">
+    <div className="relative my-4 flex w-full max-w-full flex-col space-y-2">
       {/* Tabs Header */}
       <div className="flex items-center justify-between">
         <div className="bg-muted flex items-center space-x-1 rounded-md p-1">
           <button
             onClick={() => setActiveTab("preview")}
             className={cn(
-              "ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+              "ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-sm px-2 py-1.5 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 sm:px-3 sm:text-sm",
               activeTab === "preview"
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground"
             )}
           >
-            <Eye className="mr-2 h-4 w-4" />
+            <Eye className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
             Preview
           </button>
           <button
             onClick={() => setActiveTab("code")}
             className={cn(
-              "ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+              "ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-sm px-2 py-1.5 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 sm:px-3 sm:text-sm",
               activeTab === "code"
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground"
             )}
           >
-            <Code className="mr-2 h-4 w-4" />
+            <Code className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
             Code
           </button>
         </div>
@@ -68,32 +68,32 @@ export function ComponentPreview({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0"
+            className="h-7 w-7 p-0 sm:h-8 sm:w-8"
             onClick={copyToClipboard}
           >
             {copied ? (
-              <Check className="h-4 w-4" />
+              <Check className="h-3 w-3 sm:h-4 sm:w-4" />
             ) : (
-              <Copy className="h-4 w-4" />
+              <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
             )}
           </Button>
         )}
       </div>
 
       {/* Content */}
-      <div className="overflow-hidden rounded-md border">
+      <div className="w-full max-w-full overflow-hidden rounded-md border">
         {activeTab === "preview" ? (
           <div
             className={cn(
-              "flex min-h-[350px] items-center justify-center p-10",
+              "flex min-h-[250px] items-center justify-center p-4 sm:min-h-[350px] sm:p-10",
               className
             )}
           >
             {children}
           </div>
         ) : (
-          <div className="relative">
-            <CodeHighlighter code={code} language="tsx" />
+          <div className="relative w-full overflow-hidden">
+            <CodeHighlighter code={code} language="tsx" className="w-full" />
           </div>
         )}
       </div>
