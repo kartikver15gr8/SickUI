@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import GitHubStarBtn from "./githubstar-btn";
+import Image from "next/image";
 
 const navigation = [
   { name: "Installation", href: "/docs/installation" },
@@ -148,7 +149,19 @@ export default function Layout({ children }: LayoutProps) {
             }`}
           >
             {/* Close button */}
-            <div className="flex justify-end border-b p-4">
+            <div className="flex justify-between p-4">
+              <Link href="/" className="ml-2 mr-5 flex items-center space-x-3">
+                <Image
+                  className={`h-9 w-9 rounded-lg dark:border dark:border-[#9493935a]`}
+                  src={"/logo/sickui-logo.png"}
+                  alt="SickUI Logo"
+                  width={200}
+                  height={200}
+                />
+                <span className="text-[15px] font-bold sm:inline-block sm:text-[12px] md:text-[14px] lg:text-[15px]">
+                  SickUI
+                </span>
+              </Link>
               <button
                 onClick={handleCloseMobileMenu}
                 className="text-muted-foreground hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center rounded-md p-2 transition-colors"
