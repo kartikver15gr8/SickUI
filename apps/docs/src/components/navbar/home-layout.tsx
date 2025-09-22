@@ -152,35 +152,10 @@ export default function HomeLayout({
           {/* Search box with github and theme toggle buttons */}
           <div className="hidden items-start gap-x-2 md:flex">
             {/* Search field + buttons wrapper */}
-            <div
-              onClick={() => setSearchBoxActive(true)}
-              className={`relative ${COLORS.searchBg} flex h-9 w-60 items-center rounded-xl hover:cursor-pointer lg:w-72 ${COLORS.searchBorder} px-2`}
-            >
-              <span
-                className={`${COLORS.textMuted} text-[12px] md:text-[14px] lg:text-[15px]`}
-              >
-                Search
-              </span>
-
-              {/* Button cluster – absolute-positioned in the top-right */}
-              <div className="absolute right-2 top-0 flex h-full items-center gap-x-1">
-                <button
-                  className={`flex h-5 w-5 items-center justify-center rounded-md ${COLORS.buttonBorder}`}
-                >
-                  <SVGIcon className="flex" svgString={RAW_ICONS.CommandBtn} />
-                </button>
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevents event from bubbling up
-                    setSearchBoxActive(!searchBoxActive);
-                  }}
-                  className={`flex h-5 w-5 items-center justify-center rounded-md ${COLORS.buttonBorder} ${COLORS.textMuted}`}
-                >
-                  <span className="text-xs font-medium">k</span>
-                </button>
-              </div>
-            </div>
+            <SearchField
+              searchBoxActive={searchBoxActive}
+              setSearchBoxActive={setSearchBoxActive}
+            />
             {/* Whatever comes next */}
             <div className="flex items-center">
               <GitHubStarBtn />
@@ -194,16 +169,33 @@ export default function HomeLayout({
         </div>
       </header>
 
-      {isOpen && <MobileNav isOpen={isOpen} />}
+      {isOpen && (
+        <MobileNav
+          isOpen={isOpen}
+          searchBoxActive={searchBoxActive}
+          setSearchBoxActive={setSearchBoxActive}
+        />
+      )}
 
-      {searchBoxActive && <SearchBox />}
+      {/* {searchBoxActive && <SearchBox />} */}
+      {searchBoxActive && (
+        <SearchBox closeButtonHandler={() => setSearchBoxActive(false)} />
+      )}
 
       <main className="flex flex-1 flex-col">{children}</main>
     </div>
   );
 }
 
-function MobileNav({ isOpen }: { isOpen: boolean }) {
+function MobileNav({
+  isOpen,
+  searchBoxActive,
+  setSearchBoxActive,
+}: {
+  isOpen: boolean;
+  searchBoxActive: boolean;
+  setSearchBoxActive: (val: boolean) => void;
+}) {
   return (
     <div className="fixed z-50 mt-[70px] w-full rounded px-4 sm:px-6 md:px-10 lg:px-20 xl:px-28 2xl:px-40">
       <motion.div
@@ -217,19 +209,77 @@ function MobileNav({ isOpen }: { isOpen: boolean }) {
             return (
               <motion.div
                 variants={itemVariants}
-                className={`flex h-12 items-center p-2 ${
-                  key < navigation.length - 1
-                    ? "border-b border-[#9DA3AF] dark:border-[#2D2D2D]"
-                    : ""
-                }`}
+                className={`flex h-12 items-center border-b border-[#9DA3AF] dark:border-[#2D2D2D]`}
                 key={key}
               >
-                <p>{elem.name}</p>
+                <Link
+                  className="flex h-full w-full items-center p-2"
+                  href={elem.href}
+                >
+                  {elem.name}
+                </Link>
               </motion.div>
             );
           })}
+          <motion.div
+            variants={itemVariants}
+            className={`flex h-12 items-center gap-x-1 p-2`}
+          >
+            <SearchField
+              searchBoxActive={searchBoxActive}
+              setSearchBoxActive={setSearchBoxActive}
+            />
+            <div className="flex items-center">
+              <GitHubStarBtn />
+              <span
+                className={`h-5 rounded-full border-[0.4px] ${COLORS.divider}`}
+              ></span>
+
+              <ThemeToggle />
+            </div>
+          </motion.div>
         </div>
       </motion.div>
+    </div>
+  );
+}
+
+function SearchField({
+  searchBoxActive,
+  setSearchBoxActive,
+}: {
+  searchBoxActive: boolean;
+  setSearchBoxActive: (val: boolean) => void;
+}) {
+  return (
+    <div
+      onClick={() => setSearchBoxActive(true)}
+      className={`relative ${COLORS.searchBg} flex h-9 w-full items-center rounded-xl hover:cursor-pointer md:w-60 lg:w-72 ${COLORS.searchBorder} px-2`}
+    >
+      <span
+        className={`${COLORS.textMuted} text-[12px] md:text-[14px] lg:text-[15px]`}
+      >
+        Search
+      </span>
+
+      {/* Button cluster – absolute-positioned in the top-right */}
+      <div className="absolute right-2 top-0 flex h-full items-center gap-x-1">
+        <button
+          className={`flex h-5 w-5 items-center justify-center rounded-md ${COLORS.buttonBorder}`}
+        >
+          <SVGIcon className="flex" svgString={RAW_ICONS.CommandBtn} />
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // Prevents event from bubbling up
+            setSearchBoxActive(!searchBoxActive);
+          }}
+          className={`flex h-5 w-5 items-center justify-center rounded-md ${COLORS.buttonBorder} ${COLORS.textMuted}`}
+        >
+          <span className="text-xs font-medium">k</span>
+        </button>
+      </div>
     </div>
   );
 }

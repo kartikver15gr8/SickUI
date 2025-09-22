@@ -1,4 +1,5 @@
 "use client";
+
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
@@ -22,7 +23,11 @@ const SearchOptionComponentList = [
   { href: "/docs/components/button", title: "Button" },
 ];
 
-export default function SearchBox() {
+export default function SearchBox({
+  closeButtonHandler,
+}: {
+  closeButtonHandler: () => void;
+}) {
   const [searchKey, setSearchKey] = useState("");
 
   const searchKeyArray = SearchOptionList.filter((key) =>
@@ -43,14 +48,26 @@ export default function SearchBox() {
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       >
         <div
-          className={`max-h-[50%] w-full max-w-xl rounded-2xl ${BORDER_COLORS.parentBoxBorder} bg-background p-2 shadow-xl`}
+          className={`max-h-[50%] w-[80%] max-w-xl rounded-2xl md:w-full ${BORDER_COLORS.parentBoxBorder} bg-background p-1 shadow-xl md:p-2`}
         >
-          <input
-            className={`h-12 w-full rounded-xl border-4 p-2 outline-none ${BORDER_COLORS.searchBoxBorder} ${BORDER_COLORS.searchBoxBg} xl:text-lg`}
-            type="text"
-            placeholder="Search"
-            onChange={(e) => setSearchKey(e.target.value)}
-          />
+          <div
+            className={`flex h-12 w-full rounded-xl border-4 outline-none ${BORDER_COLORS.searchBoxBorder} ${BORDER_COLORS.searchBoxBg} xl:text-lg`}
+          >
+            <input
+              className="h-full w-full bg-transparent px-2 outline-none"
+              type="text"
+              placeholder="Search"
+              onChange={(e) => setSearchKey(e.target.value)}
+            />
+            <div className="flex h-full items-center p-1">
+              <button
+                onClick={closeButtonHandler}
+                className={`h-full rounded-md border-2 px-2 ${BORDER_COLORS.searchBoxBorder} text-[#787879]`}
+              >
+                Esc
+              </button>
+            </div>
+          </div>
           <div
             className={`scrollbar-hide h-52 overflow-y-auto ${BORDER_COLORS.searchResultParentBorder} mt-2 rounded-[12px]`}
           >
