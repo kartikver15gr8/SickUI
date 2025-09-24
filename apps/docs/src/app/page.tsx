@@ -1,5 +1,5 @@
 import { Button } from "@sickui/core";
-import { ArrowRight, Code, Copy, Palette, Terminal } from "lucide-react";
+import { ArrowRight, Code, Terminal } from "lucide-react";
 import Link from "next/link";
 import { CodeBlock } from "../components/code-block";
 import FooterLayout from "../components/footer/footer-layout";
@@ -54,54 +54,6 @@ export default function Home() {
                   Browse Components
                 </Button>
               </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Features */}
-        <section className="bg-muted/50 py-16">
-          <div className="mx-auto max-w-6xl px-4">
-            <div className="mb-12 text-center">
-              <h2 className="text-3xl font-bold tracking-tight">Why SickUI?</h2>
-              <p className="text-muted-foreground mt-4">
-                Copy, paste, own. The simplest way to add components to your
-                project.
-              </p>
-            </div>
-
-            <div className="grid gap-8 md:grid-cols-3">
-              <div className="space-y-4 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                  <Copy className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold">Copy & Paste</h3>
-                <p className="text-muted-foreground">
-                  Copy the code directly into your project. No package
-                  dependencies. You own the code.
-                </p>
-              </div>
-
-              <div className="space-y-4 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                  <Palette className="h-6 w-6 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold">Fully Customizable</h3>
-                <p className="text-muted-foreground">
-                  Built with Tailwind CSS and CSS variables. Customize colors,
-                  spacing, and styling to match your design.
-                </p>
-              </div>
-
-              <div className="space-y-4 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                  <Terminal className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold">CLI Powered</h3>
-                <p className="text-muted-foreground">
-                  Use our CLI to add components to your project. Automatic
-                  dependency installation and setup.
-                </p>
-              </div>
             </div>
           </div>
         </section>
