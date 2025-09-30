@@ -15,8 +15,10 @@ const navigation = [
 ];
 
 const componentLinks = [
+  { name: "Badge", href: "/docs/components/badge" },
   { name: "Button", href: "/docs/components/button" },
   { name: "Calendar", href: "/docs/components/calendar" },
+  { name: "Skeleton", href: "/docs/components/skeleton" },
   // { name: "Card", href: "/docs/components/card" },
   // { name: "Input", href: "/docs/components/input" },
   // { name: "Badge", href: "/docs/components/badge" },

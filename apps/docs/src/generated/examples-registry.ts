@@ -81,6 +81,45 @@ export function ButtonLoading() {
       component: "ButtonLoading",
     },
   },
+  skeleton: {
+    SkeletonDefault: {
+      name: "SkeletonDefault",
+      code: `import { Skeleton } from "@sickui/core";
+
+export function SkeletonDefault() {
+  return (
+    <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+  );
+}`,
+      component: "SkeletonDefault",
+    },
+    SkeletonVariants: {
+      name: "SkeletonVariants",
+      code: `import { Skeleton } from "@sickui/core";
+
+export function SkeletonVariants() {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <p className="text-sm font-medium">Default</p>
+        <Skeleton className="h-4 w-[250px]" />
+      </div>
+      <div className="space-y-2">
+        <p className="text-sm font-medium">Shimmer</p>
+        <Skeleton variant="shimmer" className="h-4 w-[250px]" />
+      </div>
+    </div>
+  );
+}`,
+      component: "SkeletonVariants",
+    },
+  },
 } as const;
 
 export type ExampleName = keyof typeof EXAMPLES_REGISTRY;
