@@ -20,7 +20,10 @@ const SearchOptionList = [
 ];
 
 const SearchOptionComponentList = [
+  { href: "/docs/components/badge", title: "Badge" },
   { href: "/docs/components/button", title: "Button" },
+  { href: "/docs/components/calendar", title: "Calendar" },
+  { href: "/docs/components/skeleton", title: "Skeleton" },
 ];
 
 export default function SearchBox({
@@ -31,11 +34,11 @@ export default function SearchBox({
   const [searchKey, setSearchKey] = useState("");
 
   const searchKeyArray = SearchOptionList.filter((key) =>
-    key.title.toLowerCase().includes(searchKey)
+    key.title.toLowerCase().includes(searchKey.toLowerCase())
   );
 
   const searchKeyCompArray = SearchOptionComponentList.filter((key) =>
-    key.title.toLowerCase().includes(searchKey)
+    key.title.toLowerCase().includes(searchKey.toLowerCase())
   );
 
   return (

@@ -1,0 +1,168 @@
+---
+title: Skeleton
+description: Use to show a placeholder while content is loading.
+component: true
+---
+
+## Installation
+
+Install via CLI:
+
+```bash
+npx @sickui/cli add skeleton
+```
+
+### Manual Installation
+
+If you prefer to install manually, copy and paste the following code into your project.
+
+```bash
+npm install class-variance-authority clsx tailwind-merge
+```
+
+## Usage
+
+<ComponentPreview name="skeleton-default" code={`import { Skeleton } from "@sickui/core";
+
+export default function Example() {
+  return (
+    <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+  );
+}`}>
+  <SkeletonDefault />
+</ComponentPreview>
+
+## Variants
+
+Use the `variant` prop to change the visual style of the Skeleton.
+
+<ComponentPreview name="skeleton-variants" code={`import { Skeleton } from "@sickui/core";
+
+export default function SkeletonVariants() {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <p className="text-sm font-medium">Default</p>
+        <Skeleton className="h-4 w-[250px]" />
+      </div>
+      <div className="space-y-2">
+        <p className="text-sm font-medium">Shimmer</p>
+        <Skeleton variant="shimmer" className="h-4 w-[250px]" />
+      </div>
+    </div>
+  );
+}`}>
+  <SkeletonVariants />
+</ComponentPreview>
+
+## Examples
+
+### Card Skeleton
+
+Perfect for loading states of card components.
+
+<ComponentPreview name="skeleton-card" code={`import { Skeleton } from "@sickui/core";
+
+export default function SkeletonCard() {
+  return (
+    <div className="flex flex-col space-y-3">
+      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+  );
+}`}>
+  <SkeletonCard />
+</ComponentPreview>
+
+### Loading State
+
+A comprehensive loading state example showing profile, content, and action skeletons.
+
+<ComponentPreview name="skeleton-loading" code={`import { Skeleton } from "@sickui/core";
+
+export default function SkeletonLoading() {
+  return (
+    <div className="space-y-6">
+      {/* Profile skeleton */}
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[200px]" />
+          <Skeleton className="h-4 w-[160px]" />
+        </div>
+      </div>
+      
+      {/* Content skeleton */}
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+      </div>
+      
+      {/* Button skeleton */}
+      <Skeleton className="h-10 w-[100px]" />
+    </div>
+  );
+}`}>
+  <SkeletonLoading />
+</ComponentPreview>
+
+## API Reference
+
+### Skeleton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default" \| "shimmer"` | `"default"` | The visual variant of the skeleton |
+| `className` | `string` | `undefined` | Additional CSS classes |
+
+## Accessibility
+
+The Skeleton component includes:
+
+- **Semantic markup**: Uses appropriate ARIA attributes for loading states
+- **Reduced motion**: Respects user's motion preferences
+- **Screen reader support**: Properly announced as loading content
+
+## Common Patterns
+
+### Text Skeleton
+```tsx
+<div className="space-y-2">
+  <Skeleton className="h-4 w-full" />
+  <Skeleton className="h-4 w-4/5" />
+  <Skeleton className="h-4 w-3/5" />
+</div>
+```
+
+### Avatar Skeleton
+```tsx
+<Skeleton className="h-10 w-10 rounded-full" />
+```
+
+### Button Skeleton
+```tsx
+<Skeleton className="h-10 w-20" />
+```
+
+### Image Skeleton
+```tsx
+<Skeleton className="h-48 w-full rounded-lg" />
+```
+
+## Best Practices
+
+1. **Match dimensions**: Make skeleton dimensions similar to actual content
+2. **Use appropriate shapes**: Round skeletons for avatars, rectangular for text
+3. **Maintain layout**: Prevent layout shifts when content loads
+4. **Consider animation**: Use shimmer variant sparingly to avoid distraction
+5. **Accessibility**: Always provide loading indicators for screen readers

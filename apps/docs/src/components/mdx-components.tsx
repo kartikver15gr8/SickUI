@@ -22,6 +22,18 @@ import {
   CalendarNoAnimation,
 } from "../registry/calendar-examples";
 
+// Import all skeleton examples for direct use in MDX
+import {
+  SkeletonDefault,
+  SkeletonVariants,
+  SkeletonCard,
+  SkeletonLoading,
+} from "../registry/skeleton-examples";
+
+import { BadgeDefault, BadgeVariants } from "../registry/badge-examples";
+
+import { CodeCopyPaste } from "@/registry/command-examples";
+
 const components = {
   // HTML elements with custom styling
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -185,6 +197,19 @@ const components = {
   CalendarVariants,
   CalendarDisabled,
   CalendarNoAnimation,
+
+  // Skeleton component examples
+  SkeletonDefault,
+  SkeletonVariants,
+  SkeletonCard,
+  SkeletonLoading,
+
+  // Badge component examples
+  BadgeDefault,
+  BadgeVariants,
+
+  // Command component examples
+  CodeCopyPaste,
 
   // Callout component
   Callout: ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (

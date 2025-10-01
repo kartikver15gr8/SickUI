@@ -1,0 +1,84 @@
+---
+title: Badge
+description: Displays a badge or a component that looks like a badge.
+component: true
+---
+
+## Installation
+
+Install via CLI:
+
+```bash
+npx @sickui/cli add badge
+```
+
+### Manual Installation
+
+If you prefer to install manually, copy and paste the following code into your project.
+
+```bash
+npm install @radix-ui/react-slot class-variance-authority clsx tailwind-merge
+```
+
+## Usage
+
+<ComponentPreview name="badge-default" code={`import { Badge } from "@/components/ui/badge";
+
+export default function Example() {
+  return <Badge>Badge</Badge>;
+}`}>
+  <BadgeDefault />
+</ComponentPreview>
+
+## Variants
+
+Use the `variant` prop to change the visual style of the Badge.
+
+<ComponentPreview name="badge-variants" code={`import { Badge } from "@/components/ui/badge";
+
+export default function BadgeVariants() {
+  return (
+    <div className="flex flex-wrap gap-4">
+      <Badge variant="default">Default</Badge>
+      <Badge variant="destructive">Destructive</Badge>
+      <Badge variant="outline">Outline</Badge>
+      <Badge variant="secondary">Secondary</Badge>
+    </div>
+  );
+}`}>
+
+  <BadgeVariants />
+</ComponentPreview>
+
+## Examples
+
+### Variants
+
+You can use the `variant` prop to create different badge styles.
+
+## API Reference
+
+### Badge
+
+| Prop      | Type                                                     | Default     | Description                                                       |
+| --------- | -------------------------------------------------------- | ----------- | ----------------------------------------------------------------- |
+| `variant` | `"default" \| "destructive" \| "outline" \| "secondary"` | `"default"` | The variant of the badge                                          |
+| `asChild` | `boolean`                                                | `false`     | Change the default rendered element for the one passed as a child |
+
+## Accessibility
+
+The Badge component is built on top of the native `badge` element and includes:
+
+- **Keyboard navigation**: Supports `Enter` and `Space` key activation
+- **Focus management**: Proper focus indicators and focus trapping
+- **Screen reader support**: Semantic badge element with proper ARIA attributes
+- **Disabled state**: Properly communicated to assistive technologies
+
+## Examples in the Wild
+
+Here are some real-world examples of how the Badge component is used:
+
+- **Call-to-action buttons** in hero sections
+- **Form submission buttons** in contact forms
+- **Navigation buttons** in pagination components
+- **Action buttons** in data tables and cards
