@@ -8,7 +8,7 @@ export const registryItemSchema = z.object({
   files: z.array(
     z.object({
       name: z.string(),
-      content: z.string(),
+      content: z.string().optional(),
     })
   ),
   type: z.enum(["components:ui", "components:component", "components:example"]),
