@@ -1,0 +1,10 @@
+{
+  "name": "badge",
+  "type": "components:ui",
+  "dependencies": [
+    "class-variance-authority",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "registryDependencies": []
+}
