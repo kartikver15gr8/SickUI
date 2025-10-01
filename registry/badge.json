@@ -6,5 +6,10 @@
     "clsx",
     "tailwind-merge"
   ],
-  "registryDependencies": []
+  "registryDependencies": [],
+  "files": [
+    {
+      "name": "badge.tsx"
+    }
+  ]
 }

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// Schema for individual registry items (with full content)
 export const registryItemSchema = z.object({
   name: z.string(),
   dependencies: z.array(z.string()).optional(),
@@ -8,15 +9,32 @@ export const registryItemSchema = z.object({
   files: z.array(
     z.object({
       name: z.string(),
-      content: z.string().optional(),
+      content: z.string(),
     })
   ),
   type: z.enum(["components:ui", "components:component", "components:example"]),
 });
 
-export const registryIndexSchema = z.array(registryItemSchema);
+// Schema for registry index (metadata only, no content)
+export const registryIndexItemSchema = z.object({
+  name: z.string(),
+  dependencies: z.array(z.string()).optional(),
+  devDependencies: z.array(z.string()).optional(),
+  registryDependencies: z.array(z.string()).optional(),
+  files: z
+    .array(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .optional(),
+  type: z.enum(["components:ui", "components:component", "components:example"]),
+});
+
+export const registryIndexSchema = z.array(registryIndexItemSchema);
 
 export type RegistryItem = z.infer<typeof registryItemSchema>;
+export type RegistryIndexItem = z.infer<typeof registryIndexItemSchema>;
 
 export const REGISTRY_URL =
   "https://raw.githubusercontent.com/kartikver15gr8/SickUI/main/registry";
@@ -24,7 +42,7 @@ export const REGISTRY_URL =
 export const GITHUB_RAW_URL =
   "https://raw.githubusercontent.com/kartikver15gr8/SickUI/main/packages/core/src/components/ui";
 
-export async function getRegistryIndex(): Promise<RegistryItem[]> {
+export async function getRegistryIndex(): Promise<RegistryIndexItem[]> {
   try {
     const response = await fetch(`${REGISTRY_URL}/index.json`);
     if (!response.ok) {
