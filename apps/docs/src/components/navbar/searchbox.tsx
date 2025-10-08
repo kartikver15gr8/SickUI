@@ -23,6 +23,7 @@ const SearchOptionComponentList = [
   { href: "/docs/components/badge", title: "Badge" },
   { href: "/docs/components/button", title: "Button" },
   { href: "/docs/components/calendar", title: "Calendar" },
+  { href: "/docs/components/circular-progress", title: "Circular Progress" },
   { href: "/docs/components/skeleton", title: "Skeleton" },
 ];
 

@@ -1,0 +1,264 @@
+---
+title: Circular Progress
+description: A circular progress indicator with smooth animations and customizable styling.
+component: true
+---
+
+## Installation
+
+Install via CLI:
+
+```bash
+npx @sickui/cli add circular-progress
+```
+
+### Manual Installation
+
+If you prefer to install manually, copy and paste the following code into your project.
+
+```bash
+npm install framer-motion class-variance-authority clsx tailwind-merge
+```
+
+## Usage
+
+<ComponentPreview name="circular-progress-default" code={`import { CircularProgress } from "@sickui/core";
+
+export default function Example() {
+  return <CircularProgress value={75} />;
+}`}>
+  <CircularProgressDefault />
+</ComponentPreview>
+
+## Size Variants
+
+Use the `size` prop to change the size of the circular progress indicator.
+
+<ComponentPreview name="circular-progress-sizes" code={`import { CircularProgress } from "@sickui/core";
+
+export default function CircularProgressSizes() {
+  return (
+    <div className="flex items-center gap-8">
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={40} size="sm" />
+        <span className="text-sm text-muted-foreground">Small</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={65} size="default" />
+        <span className="text-sm text-muted-foreground">Default</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={85} size="lg" />
+        <span className="text-sm text-muted-foreground">Large</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={90} size="xl" />
+        <span className="text-sm text-muted-foreground">Extra Large</span>
+      </div>
+    </div>
+  );
+}`}>
+  <CircularProgressSizes />
+</ComponentPreview>
+
+## Stroke Width
+
+Customize the thickness of the progress ring using the `strokeWidth` prop.
+
+<ComponentPreview name="circular-progress-strokes" code={`import { CircularProgress } from "@sickui/core";
+
+export default function CircularProgressStrokes() {
+  return (
+    <div className="flex items-center gap-8">
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={60} strokeWidth={2} />
+        <span className="text-sm text-muted-foreground">Thin (2px)</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={70} strokeWidth={6} />
+        <span className="text-sm text-muted-foreground">Default (6px)</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={80} strokeWidth={10} />
+        <span className="text-sm text-muted-foreground">Thick (10px)</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={90} strokeWidth={14} />
+        <span className="text-sm text-muted-foreground">Extra Thick (14px)</span>
+      </div>
+    </div>
+  );
+}`}>
+  <CircularProgressStrokes />
+</ComponentPreview>
+
+## Animated Progress
+
+Create smooth animated progress indicators with real-time updates.
+
+<ComponentPreview name="circular-progress-animated" code={`"use client";
+
+import { CircularProgress } from "@sickui/core";
+import { useState, useEffect } from "react";
+
+export default function CircularProgressAnimated() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prev) => (prev >= 100 ? 0 : prev + 1));
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-8">
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={progress} duration={0.1} />
+        <span className="text-sm text-muted-foreground">Animated Progress</span>
+      </div>
+    </div>
+  );
+}`}>
+  <CircularProgressAnimated />
+</ComponentPreview>
+
+## Value Display
+
+Control whether to show the percentage value using the `showValue` prop.
+
+<ComponentPreview name="circular-progress-no-value" code={`import { CircularProgress } from "@sickui/core";
+
+export default function CircularProgressNoValue() {
+  return (
+    <div className="flex items-center gap-8">
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={45} showValue={false} />
+        <span className="text-sm text-muted-foreground">No Value Display</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircularProgress value={75} showValue={true} />
+        <span className="text-sm text-muted-foreground">With Value Display</span>
+      </div>
+    </div>
+  );
+}`}>
+  <CircularProgressNoValue />
+</ComponentPreview>
+
+## Loading States
+
+Perfect for showing loading progress in applications.
+
+<ComponentPreview name="circular-progress-loading" code={`"use client";
+
+import { CircularProgress } from "@sickui/core";
+import { useState, useEffect } from "react";
+
+export default function CircularProgressLoading() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            setIsLoading(false);
+            return 100;
+          }
+          return prev + 2;
+        });
+      }, 100);
+
+      return () => clearInterval(interval);
+    }
+  }, [isLoading]);
+
+  const handleReset = () => {
+    setProgress(0);
+    setIsLoading(true);
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <CircularProgress value={progress} size="lg" />
+      <div className="flex gap-2">
+        <button
+          onClick={handleReset}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90"
+        >
+          {isLoading ? "Loading..." : "Reset"}
+        </button>
+      </div>
+    </div>
+  );
+}`}>
+  <CircularProgressLoading />
+</ComponentPreview>
+
+## API Reference
+
+### CircularProgress
+
+| Prop          | Type                                    | Default     | Description                                                    |
+| ------------- | --------------------------------------- | ----------- | -------------------------------------------------------------- |
+| `value`       | `number`                                | -           | The progress value (0-100)                                     |
+| `size`        | `"sm" \| "default" \| "lg" \| "xl"`     | `"default"` | The size of the circular progress indicator                    |
+| `strokeWidth` | `number`                                | `6`         | The width of the progress ring stroke                          |
+| `showValue`   | `boolean`                               | `true`      | Whether to display the percentage value in the center         |
+| `duration`    | `number`                                | `1`         | Animation duration in seconds for progress changes            |
+| `className`   | `string`                                | -           | Additional CSS classes to apply to the component              |
+
+The component also accepts all standard HTML `div` attributes.
+
+## Accessibility
+
+The CircularProgress component includes built-in accessibility features:
+
+- **ARIA attributes**: Proper `role` and `aria-*` attributes for screen readers
+- **Semantic structure**: Uses semantic HTML elements where appropriate
+- **Keyboard navigation**: Focusable when interactive
+- **Screen reader support**: Progress value is announced to assistive technologies
+- **High contrast**: Respects system color preferences and theme settings
+
+## Examples in the Wild
+
+Here are some common use cases for the CircularProgress component:
+
+### File Upload Progress
+```tsx
+<CircularProgress 
+  value={uploadProgress} 
+  size="lg" 
+  strokeWidth={8}
+/>
+```
+
+### Loading Spinner
+```tsx
+<CircularProgress 
+  value={loadingProgress} 
+  showValue={false}
+  duration={0.5}
+/>
+```
+
+### Dashboard Metrics
+```tsx
+<div className="grid grid-cols-3 gap-4">
+  <CircularProgress value={85} size="sm" />
+  <CircularProgress value={92} size="sm" />
+  <CircularProgress value={78} size="sm" />
+</div>
+```
+
+### Skill Level Indicators
+```tsx
+<CircularProgress 
+  value={skillLevel} 
+  size="xl" 
+  strokeWidth={12}
+/>
+```

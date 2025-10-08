@@ -155,7 +155,7 @@ export async function smartMergeCSS(
 
     if (hasThemeBlock) {
       // Find and enhance existing @theme block
-      const themeRegex = /(@theme[^{]*{)([\s\S]*?)(})/;
+      const themeRegex = /(@theme\s*{)([\s\S]*?)(})/;
       const match = existingCSS.match(themeRegex);
 
       if (match) {
@@ -176,22 +176,7 @@ export async function smartMergeCSS(
           `$1${updatedThemeContent}$3`
         );
 
-        // Also add legacy CSS variables for component compatibility
-        const legacyVars = missingVars
-          .map((variable) => {
-            if (variable === "--radius") {
-              return `  ${variable}: ${SICKUI_LIGHT_VALUES[variable]};`;
-            }
-            return `  ${variable}: var(--color-${variable.slice(2)});`;
-          })
-          .join("\n");
-
-        appendContent =
-          "\n\n/* SickUI CSS Variables for Component Compatibility */\n:root {\n" +
-          legacyVars +
-          "\n}";
-
-        // Add dark mode variables to the updated CSS
+        // Add dark mode @theme block
         const darkModeVars = missingVars
           .map((variable) => {
             const value = SICKUI_DARK_VALUES[variable];
@@ -202,23 +187,28 @@ export async function smartMergeCSS(
           })
           .join("\n");
 
-        appendContent += `
+        // Check if dark mode @theme exists
+        const hasDarkTheme =
+          /@media \(prefers-color-scheme: dark\)[\s\S]*?@theme/.test(
+            updatedCSS
+          );
+
+        if (!hasDarkTheme) {
+          appendContent = `
 
 @media (prefers-color-scheme: dark) {
   @theme {
 ${darkModeVars}
   }
-  :root {
-${formatVariables(missingVars, true).replace(/^/gm, "    ")}
-  }
 }`;
+        }
 
         await fs.writeFile(cssPath, updatedCSS + appendContent, "utf8");
         return;
       }
     } else {
       // Create new @theme block
-      appendContent += "\n\n/* SickUI Theme Variables */\n@theme {\n";
+      appendContent += "\n\n@theme {\n";
       appendContent += missingVars
         .map((variable) => {
           const value = SICKUI_LIGHT_VALUES[variable];
@@ -230,25 +220,8 @@ ${formatVariables(missingVars, true).replace(/^/gm, "    ")}
         .join("\n");
       appendContent += "\n}\n";
 
-      // Add legacy CSS variables
-      appendContent +=
-        "\n/* SickUI CSS Variables for Component Compatibility */\n:root {\n";
-      appendContent += formatVariables(missingVars, false);
-      appendContent += "\n}";
-    }
-  } else {
-    // For Tailwind v3, add regular CSS variables
-    appendContent += "\n\n/* SickUI Variables */\n:root {\n";
-    appendContent += formatVariables(missingVars, false);
-    appendContent += "\n}";
-  }
-
-  // Always add dark mode variables for SickUI components
-  if (missingVars.length > 0) {
-    if (isTailwindV4) {
-      appendContent +=
-        "\n\n@media (prefers-color-scheme: dark) {\n  @theme {\n";
-      appendContent += missingVars
+      // Add dark mode @theme
+      const darkModeVars = missingVars
         .map((variable) => {
           const value = SICKUI_DARK_VALUES[variable];
           if (variable === "--radius") {
@@ -257,17 +230,26 @@ ${formatVariables(missingVars, true).replace(/^/gm, "    ")}
           return `    --color-${variable.slice(2)}: ${value};`;
         })
         .join("\n");
-      appendContent += "\n  }\n  :root {\n";
-      appendContent += formatVariables(missingVars, true).replace(
-        /^/gm,
-        "    "
-      );
-      appendContent += "\n  }\n}";
-    } else {
-      appendContent += "\n\n@media (prefers-color-scheme: dark) {\n  :root {\n";
-      appendContent += formatVariables(missingVars, true).replace(/^/gm, "  ");
-      appendContent += "\n  }\n}";
+
+      appendContent += `
+@media (prefers-color-scheme: dark) {
+  @theme {
+${darkModeVars}
+  }
+}`;
     }
+  } else {
+    // For Tailwind v3, add regular CSS variables
+    appendContent += "\n\n/* SickUI Variables */\n:root {\n";
+    appendContent += formatVariables(missingVars, false);
+    appendContent += "\n}";
+  }
+
+  // Add dark mode variables for Tailwind v3 only (v4 handles it above)
+  if (missingVars.length > 0 && !isTailwindV4) {
+    appendContent += "\n\n@media (prefers-color-scheme: dark) {\n  :root {\n";
+    appendContent += formatVariables(missingVars, true).replace(/^/gm, "  ");
+    appendContent += "\n  }\n}";
   }
 
   // Add essential base styles for SickUI components if not present

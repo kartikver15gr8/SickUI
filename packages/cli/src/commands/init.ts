@@ -23,6 +23,12 @@ const PROJECT_DEPENDENCIES = [
   "tailwind-merge",
 ];
 
+const TAILWIND_V3_DEPENDENCIES = [
+  "tailwindcss@^3.4.0",
+  "postcss@latest",
+  "autoprefixer@latest",
+];
+
 const TAILWIND_V4_DEPENDENCIES = [
   "tailwindcss@latest",
   "postcss@latest",
@@ -70,30 +76,7 @@ export async function promptForConfig(
   const highlight = (text: string) => chalk.cyan(text);
 
   const styles = ["default"];
-  const baseColors = [
-    "slate",
-    "gray",
-    "zinc",
-    "neutral",
-    "stone",
-    "red",
-    "orange",
-    "amber",
-    "yellow",
-    "lime",
-    "green",
-    "emerald",
-    "teal",
-    "cyan",
-    "sky",
-    "blue",
-    "indigo",
-    "violet",
-    "purple",
-    "fuchsia",
-    "pink",
-    "rose",
-  ];
+  const baseColors = ["slate", "gray", "zinc", "neutral", "stone"];
 
   const options = useDefaults
     ? {
@@ -176,8 +159,8 @@ export async function runInit(cwd: string, config: any, projectInfo: any) {
   logger.info("Installing dependencies...");
   const packageManager = await getPackageManager(cwd);
 
-  // Always install Tailwind v4 dependencies since we're installing latest
-  const dependenciesToInstall = TAILWIND_V4_DEPENDENCIES;
+  // Install Tailwind v3 by default to match SickUI components
+  const dependenciesToInstall = TAILWIND_V3_DEPENDENCIES;
 
   // Install Tailwind and PostCSS dependencies first
   await execa(

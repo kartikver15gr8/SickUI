@@ -58,5 +58,20 @@
       }
     ],
     "type": "components:ui"
+  },
+  {
+    "name": "circular-progress",
+    "dependencies": [
+      "framer-motion",
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "name": "circular-progress.tsx"
+      }
+    ],
+    "type": "components:ui"
   }
 ]

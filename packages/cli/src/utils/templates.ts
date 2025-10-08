@@ -100,20 +100,10 @@ module.exports = {
   plugins: [require("tailwindcss-animate")],
 }`;
 
-export const TAILWIND_CONFIG_V4_TEMPLATE = `import type { Config } from 'tailwindcss'
-
-const config: Config = {
-  content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-  ],
-  // For Tailwind v4, colors are defined in CSS using @theme
-  // No need to define them here
-}
-
-export default config`;
+export const TAILWIND_CONFIG_V4_TEMPLATE = `// Tailwind CSS v4 doesn't use this config file
+// All configuration is done in CSS using @theme
+// This file is kept for compatibility but is not used
+export default {}`;
 
 export const GLOBALS_CSS_TEMPLATE = `/*
  * SickUI Global Styles
@@ -242,30 +232,6 @@ export const GLOBALS_CSS_V4_TEMPLATE = `/*
   }
 }
 
-/* Legacy CSS Variables for SickUI Components */
-:root {
-  --background: var(--color-background);
-  --foreground: var(--color-foreground);
-  --card: var(--color-card);
-  --card-foreground: var(--color-card-foreground);
-  --popover: var(--color-popover);
-  --popover-foreground: var(--color-popover-foreground);
-  --primary: var(--color-primary);
-  --primary-foreground: var(--color-primary-foreground);
-  --secondary: var(--color-secondary);
-  --secondary-foreground: var(--color-secondary-foreground);
-  --muted: var(--color-muted);
-  --muted-foreground: var(--color-muted-foreground);
-  --accent: var(--color-accent);
-  --accent-foreground: var(--color-accent-foreground);
-  --destructive: var(--color-destructive);
-  --destructive-foreground: var(--color-destructive-foreground);
-  --border: var(--color-border);
-  --input: var(--color-input);
-  --ring: var(--color-ring);
-}
-
-/* Base Styles */
 @layer base {
   * {
     @apply border-border;

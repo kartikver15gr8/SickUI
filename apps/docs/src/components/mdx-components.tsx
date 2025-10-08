@@ -32,6 +32,16 @@ import {
 
 import { BadgeDefault, BadgeVariants } from "../registry/badge-examples";
 
+// Import all circular progress examples for direct use in MDX
+import {
+  CircularProgressDefault,
+  CircularProgressSizes,
+  CircularProgressStrokes,
+  CircularProgressAnimated,
+  CircularProgressNoValue,
+  CircularProgressLoading,
+} from "../registry/circular-progress-examples";
+
 import { CodeCopyPaste } from "@/registry/command-examples";
 
 const components = {
@@ -207,6 +217,14 @@ const components = {
   // Badge component examples
   BadgeDefault,
   BadgeVariants,
+
+  // Circular Progress component examples
+  CircularProgressDefault,
+  CircularProgressSizes,
+  CircularProgressStrokes,
+  CircularProgressAnimated,
+  CircularProgressNoValue,
+  CircularProgressLoading,
 
   // Command component examples
   CodeCopyPaste,

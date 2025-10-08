@@ -7,6 +7,7 @@ import docs__installationMdx from './docs__installation.mdx.json' with { type: '
 import docs__components__badgeMdx from './docs__components__badge.mdx.json' with { type: 'json' }
 import docs__components__buttonMdx from './docs__components__button.mdx.json' with { type: 'json' }
 import docs__components__calendarMdx from './docs__components__calendar.mdx.json' with { type: 'json' }
+import docs__components__circularProgressMdx from './docs__components__circular-progress.mdx.json' with { type: 'json' }
 import docs__components__skeletonMdx from './docs__components__skeleton.mdx.json' with { type: 'json' }
 
-export const allDocs = [docs__cliMdx, docs__componentsMdx, docs__gettingStartedMdx, docs__installationMdx, docs__components__badgeMdx, docs__components__buttonMdx, docs__components__calendarMdx, docs__components__skeletonMdx]
+export const allDocs = [docs__cliMdx, docs__componentsMdx, docs__gettingStartedMdx, docs__installationMdx, docs__components__badgeMdx, docs__components__buttonMdx, docs__components__calendarMdx, docs__components__circularProgressMdx, docs__components__skeletonMdx]
