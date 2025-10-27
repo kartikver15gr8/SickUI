@@ -24,7 +24,7 @@ const circularProgressVariants = cva(
       },
     },
     defaultVariants: {
-       size: "default",
+      size: "default",
     },
   }
 );
@@ -65,7 +65,7 @@ const CircularProgress = React.forwardRef<
     };
 
     const actualSize = sizeMap[size || "default"];
-    const radius = (actualSize - strokeWidth) / 2;
+    const radius = Math.max((actualSize - strokeWidth) / 2, 0);
     const circumference = 2 * Math.PI * radius;
 
     // Animated motion values
