@@ -130,6 +130,16 @@ export async function smartMergeCSS(
 ): Promise<void> {
   let existingCSS = await fs.readFile(cssPath, "utf8");
 
+  // Fix v4 to v3 conversion if needed
+  const hasV4Syntax = existingCSS.includes('@import "tailwindcss"');
+  const hasV4Theme = existingCSS.includes("@theme");
+
+  if (hasV4Syntax || hasV4Theme) {
+    // Convert v4 syntax to v3 syntax
+    existingCSS = convertV4ToV3CSS(existingCSS);
+    isTailwindV4 = false; // Force v3 mode after conversion
+  }
+
   // Fix common CSS issues: wrong media query for dark mode
   existingCSS = existingCSS.replace(
     /@media \(prefers-color-scheme: light\) \{[\s\S]*?--background: #0a0a0a;/g,
@@ -272,4 +282,71 @@ ${darkModeVars}
   // Write the updated CSS
   const updatedCSS = existingCSS + appendContent;
   await fs.writeFile(cssPath, updatedCSS, "utf8");
+}
+
+/**
+ * Convert Tailwind v4 CSS syntax to v3 syntax
+ */
+function convertV4ToV3CSS(css: string): string {
+  let convertedCSS = css;
+
+  // Replace @import "tailwindcss" with v3 directives
+  convertedCSS = convertedCSS.replace(
+    /@import\s+["']tailwindcss["'];?\s*/g,
+    "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n"
+  );
+
+  // Remove @theme blocks and extract variables
+  const themeRegex = /@theme\s+[^{]*\{([^}]*)\}/g;
+  let themeMatch;
+  const extractedVars: string[] = [];
+
+  while ((themeMatch = themeRegex.exec(convertedCSS)) !== null) {
+    const themeContent = themeMatch[1];
+
+    // Convert --color-* variables to regular CSS variables
+    const colorVarRegex = /--color-([^:]+):\s*([^;]+);/g;
+    let colorMatch;
+
+    while ((colorMatch = colorVarRegex.exec(themeContent)) !== null) {
+      const varName = colorMatch[1];
+      const varValue = colorMatch[2].trim();
+
+      // Skip if it's a var() reference
+      if (!varValue.startsWith("var(")) {
+        extractedVars.push(`  --${varName}: ${varValue};`);
+      }
+    }
+
+    // Extract other variables (like --radius)
+    const otherVarRegex = /--((?!color-)[^:]+):\s*([^;]+);/g;
+    let otherMatch;
+
+    while ((otherMatch = otherVarRegex.exec(themeContent)) !== null) {
+      const varName = otherMatch[1];
+      const varValue = otherMatch[2].trim();
+
+      if (!varValue.startsWith("var(")) {
+        extractedVars.push(`  --${varName}: ${varValue};`);
+      }
+    }
+  }
+
+  // Remove all @theme blocks
+  convertedCSS = convertedCSS.replace(/@theme\s+[^{]*\{[^}]*\}/g, "");
+
+  // If we extracted variables, add them to :root
+  if (extractedVars.length > 0) {
+    const rootVars = `:root {\n${extractedVars.join("\n")}\n}\n\n`;
+
+    // Insert after the @tailwind directives
+    const tailwindDirectives =
+      "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n";
+    convertedCSS = convertedCSS.replace(
+      tailwindDirectives,
+      tailwindDirectives + "\n" + rootVars
+    );
+  }
+
+  return convertedCSS;
 }

@@ -24,7 +24,7 @@ const circularProgressVariants = cva(
       },
     },
     defaultVariants: {
-      size: "default",
+       size: "default",
     },
   }
 );

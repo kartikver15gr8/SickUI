@@ -154,6 +154,9 @@ export async function runInit(cwd: string, config: any, projectInfo: any) {
   // Check and fix Tailwind/PostCSS setup first
   await ensureTailwindSetup(cwd);
 
+  // Remove conflicting Tailwind v4 packages first
+  await removeConflictingTailwindPackages(cwd);
+
   // Install dependencies first so we can detect the correct Tailwind version
   logger.info("");
   logger.info("Installing dependencies...");
@@ -210,8 +213,8 @@ export async function runInit(cwd: string, config: any, projectInfo: any) {
     }`
   );
 
-  // Write PostCSS config if it doesn't exist
-  await ensurePostCSSConfig(cwd);
+  // Write PostCSS config (force v3 format)
+  await ensurePostCSSConfig(cwd, true);
 
   // Write css file.
   const cssDir = path.resolve(cwd, path.dirname(config.tailwind.css));
@@ -300,6 +303,60 @@ export async function getPackageManager(
   return "npm";
 }
 
+async function removeConflictingTailwindPackages(cwd: string) {
+  const packageJsonPath = path.resolve(cwd, "package.json");
+
+  if (!existsSync(packageJsonPath)) {
+    return;
+  }
+
+  try {
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf8"));
+    const dependencies = {
+      ...packageJson.dependencies,
+      ...packageJson.devDependencies,
+    };
+
+    const conflictingPackages = [];
+
+    // Check for Tailwind v4 packages that conflict with v3
+    if (dependencies["@tailwindcss/postcss"]) {
+      conflictingPackages.push("@tailwindcss/postcss");
+      logger.info(
+        "🔄 Removing conflicting @tailwindcss/postcss (v4) package..."
+      );
+    }
+
+    // If we have both v3 and v4 tailwindcss, remove the newer one
+    if (dependencies.tailwindcss) {
+      const version = dependencies.tailwindcss.replace(/[^\d.]/g, "");
+      const majorVersion = parseInt(version.split(".")[0]);
+
+      if (majorVersion >= 4) {
+        conflictingPackages.push("tailwindcss");
+        logger.info("🔄 Removing Tailwind CSS v4 to install v3...");
+      }
+    }
+
+    if (conflictingPackages.length > 0) {
+      const packageManager = await getPackageManager(cwd);
+
+      await execa(
+        packageManager,
+        [
+          packageManager === "npm" ? "uninstall" : "remove",
+          ...conflictingPackages,
+        ],
+        { cwd }
+      );
+
+      logger.success("✅ Removed conflicting Tailwind packages");
+    }
+  } catch (error) {
+    logger.warn("⚠️  Could not check for conflicting packages");
+  }
+}
+
 async function ensureTailwindSetup(cwd: string) {
   const packageJsonPath = path.resolve(cwd, "package.json");
 
@@ -335,45 +392,65 @@ async function ensureTailwindSetup(cwd: string) {
   }
 }
 
-async function ensurePostCSSConfig(cwd: string) {
+async function ensurePostCSSConfig(cwd: string, forceV3: boolean = false) {
   const postCSSConfigPath = path.resolve(cwd, "postcss.config.js");
   const postCSSConfigMjsPath = path.resolve(cwd, "postcss.config.mjs");
   const postCSSConfigCjsPath = path.resolve(cwd, "postcss.config.cjs");
 
   // Check if PostCSS config already exists
-  if (
-    existsSync(postCSSConfigPath) ||
-    existsSync(postCSSConfigMjsPath) ||
-    existsSync(postCSSConfigCjsPath)
-  ) {
+  let existingConfigPath = "";
+  if (existsSync(postCSSConfigPath)) existingConfigPath = postCSSConfigPath;
+  else if (existsSync(postCSSConfigMjsPath))
+    existingConfigPath = postCSSConfigMjsPath;
+  else if (existsSync(postCSSConfigCjsPath))
+    existingConfigPath = postCSSConfigCjsPath;
+
+  if (existingConfigPath) {
+    const configContent = await fs.readFile(existingConfigPath, "utf8");
+
+    // If forceV3 is true, update existing config to v3 format
+    if (forceV3) {
+      logger.info("🔄 Updating PostCSS config to Tailwind v3 format...");
+
+      // Use appropriate syntax based on file extension
+      const isESM = existingConfigPath.endsWith(".mjs");
+      const v3PostCSSConfig = isESM
+        ? `const config = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+
+export default config;`
+        : `module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}`;
+
+      await fs.writeFile(existingConfigPath, v3PostCSSConfig, "utf8");
+      logger.success(
+        `✅ Updated ${path.basename(existingConfigPath)} to v3 format`
+      );
+      return;
+    }
+
     logger.info("📄 PostCSS config already exists");
 
-    // Check if existing config has the old format that causes errors
-    let existingConfigPath = "";
-    if (existsSync(postCSSConfigPath)) existingConfigPath = postCSSConfigPath;
-    else if (existsSync(postCSSConfigMjsPath))
-      existingConfigPath = postCSSConfigMjsPath;
-    else if (existsSync(postCSSConfigCjsPath))
-      existingConfigPath = postCSSConfigCjsPath;
-
-    if (existingConfigPath) {
-      const configContent = await fs.readFile(existingConfigPath, "utf8");
-
-      // Check for problematic old format
-      if (
-        configContent.includes("tailwindcss: {}") &&
-        !configContent.includes("@tailwindcss/postcss")
-      ) {
-        logger.warn(
-          "⚠️  Found old PostCSS config format that may cause errors"
-        );
-        logger.info(
-          "   Your config uses 'tailwindcss: {}' which can cause PostCSS plugin errors"
-        );
-        logger.info(
-          "   Consider updating to use '@tailwindcss/postcss' for Tailwind v4+"
-        );
-      }
+    // Check for problematic old format
+    if (
+      configContent.includes("tailwindcss: {}") &&
+      !configContent.includes("@tailwindcss/postcss")
+    ) {
+      logger.warn("⚠️  Found old PostCSS config format that may cause errors");
+      logger.info(
+        "   Your config uses 'tailwindcss: {}' which can cause PostCSS plugin errors"
+      );
+      logger.info(
+        "   Consider updating to use '@tailwindcss/postcss' for Tailwind v4+"
+      );
     }
     return;
   }
@@ -382,7 +459,10 @@ async function ensurePostCSSConfig(cwd: string) {
   const packageJsonPath = path.resolve(cwd, "package.json");
   let useLegacyFormat = true;
 
-  if (existsSync(packageJsonPath)) {
+  // Force v3 format if requested
+  if (forceV3) {
+    useLegacyFormat = true;
+  } else if (existsSync(packageJsonPath)) {
     try {
       const packageJson = JSON.parse(
         await fs.readFile(packageJsonPath, "utf8")
