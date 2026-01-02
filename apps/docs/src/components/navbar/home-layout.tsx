@@ -59,7 +59,7 @@ const COLORS = {
   searchBg: "bg-[#f0f0f0] dark:bg-[#1e1e1e58]",
   searchBorder: "border border-[#9CA3AF] dark:border-[#2d2d2d]",
   buttonBorder: "border border-[#9CA3AF] dark:border-[#4c5055]",
-  textMuted: "text-[#9CA3AF]",
+  textMuted: "text-[#98999B]",
   divider: "border-[#C6C9CF] dark:border-[#2D2D2D]",
   logoBorder: "dark:border-[#9493935a]",
 } as const;

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import { ThemeProvider } from "../components/theme-provider";
 import "../styles/globals.css";
+import TopNotice from "@/components/top-notice";
 
 const nunito = Nunito_Sans({
   subsets: ["latin"],
@@ -106,6 +107,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <TopNotice />
           {children}
         </ThemeProvider>
       </body>

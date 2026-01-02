@@ -49,7 +49,11 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/docs/components">
-                <Button variant="outline" size="lg" className="gap-2">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="gap-2 border-[#2E2E2E]"
+                >
                   <Code className="h-4 w-4" />
                   Browse Components
                 </Button>
