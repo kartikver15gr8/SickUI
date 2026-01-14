@@ -5,7 +5,7 @@ import chalk from "chalk";
 import { logger } from "../utils/logger";
 import { getProjectInfo } from "../utils/get-project-info";
 import {
-  COMPONENTS_JSON_TEMPLATE,
+  // COMPONENTS_JSON_TEMPLATE,
   UTILS_TEMPLATE,
   TAILWIND_CONFIG_TEMPLATE,
   TAILWIND_CONFIG_V4_TEMPLATE,
@@ -29,11 +29,11 @@ const TAILWIND_V3_DEPENDENCIES = [
   "autoprefixer@latest",
 ];
 
-const TAILWIND_V4_DEPENDENCIES = [
-  "tailwindcss@latest",
-  "postcss@latest",
-  "@tailwindcss/postcss@latest",
-];
+// const TAILWIND_V4_DEPENDENCIES = [
+//   "tailwindcss@latest",
+//   "postcss@latest",
+//   "@tailwindcss/postcss@latest",
+// ];
 
 export const init = new Command()
   .name("init")
@@ -69,7 +69,7 @@ export const init = new Command()
   });
 
 export async function promptForConfig(
-  cwd: string,
+  _cwd: string,
   defaultConfig: any,
   useDefaults: boolean
 ) {

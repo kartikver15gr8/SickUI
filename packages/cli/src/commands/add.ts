@@ -92,7 +92,7 @@ export const add = new Command()
       }
     }
 
-    const spinner = logger.info(`Installing components...`);
+    logger.info(`Installing components...`);
     for (const item of payload) {
       logger.info(`Installing ${item.name}...`);
 

@@ -66,7 +66,7 @@ export async function resolveConfigPaths(cwd: string, config: Config) {
 
 export async function resolveImport(
   importPath: string,
-  config: Config,
+  _config: Config,
   cwd?: string
 ) {
   if (importPath.startsWith("@/")) {
