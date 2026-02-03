@@ -4,6 +4,7 @@ import fs from "fs-extra";
 import chalk from "chalk";
 import { logger } from "../utils/logger";
 import { getProjectInfo } from "../utils/get-project-info";
+import { parseTailwindMajorVersion } from "../utils/tailwind";
 
 export const check = new Command()
   .name("check")
@@ -15,7 +16,7 @@ export const check = new Command()
     logger.info("");
 
     // Check PostCSS/Tailwind setup first
-    await checkPostCSSSetup(cwd);
+    const tailwindMajor = await checkPostCSSSetup(cwd);
     logger.info("");
 
     // Check if components.json exists
@@ -44,15 +45,30 @@ export const check = new Command()
 
     // Check if CSS file has required variables
     const cssContent = await fs.readFile(cssPath, "utf8");
-    const requiredVariables = [
-      "--background",
-      "--foreground",
-      "--primary",
-      "--primary-foreground",
-      "--border",
-      "--input",
-      "--ring",
-    ];
+    const isTailwindV4 =
+      tailwindMajor !== null
+        ? tailwindMajor >= 4
+        : cssContent.includes("@theme") ||
+          cssContent.includes("--color-background");
+    const requiredVariables = isTailwindV4
+      ? [
+          "--color-background",
+          "--color-foreground",
+          "--color-primary",
+          "--color-primary-foreground",
+          "--color-border",
+          "--color-input",
+          "--color-ring",
+        ]
+      : [
+          "--background",
+          "--foreground",
+          "--primary",
+          "--primary-foreground",
+          "--border",
+          "--input",
+          "--ring",
+        ];
 
     const missingVariables = requiredVariables.filter(
       (variable) => !cssContent.includes(variable)
@@ -75,29 +91,44 @@ export const check = new Command()
     logger.success("✅ All required CSS variables found");
 
     // Check if Tailwind config exists
-    const projectInfo = await getProjectInfo();
-    const tailwindConfigPath = projectInfo.isTypeScript
-      ? path.resolve(cwd, "tailwind.config.ts")
-      : path.resolve(cwd, "tailwind.config.js");
+    const projectInfo = await getProjectInfo(cwd);
+    const configuredTailwindPath = componentsJson.tailwind?.config;
+    const tailwindConfigPath = configuredTailwindPath
+      ? path.resolve(cwd, configuredTailwindPath)
+      : projectInfo.isTypeScript
+        ? path.resolve(cwd, "tailwind.config.ts")
+        : path.resolve(cwd, "tailwind.config.js");
 
-    if (!fs.existsSync(tailwindConfigPath)) {
-      logger.error("❌ Tailwind config not found");
-      logger.info(`   Run ${chalk.cyan("npx @sickui/cli init")} to create it`);
-      return;
-    }
-    logger.success("✅ Tailwind config found");
+    if (!isTailwindV4) {
+      if (!fs.existsSync(tailwindConfigPath)) {
+        logger.error("❌ Tailwind config not found");
+        logger.info(`   Run ${chalk.cyan("npx @sickui/cli init")} to create it`);
+        return;
+      }
+      logger.success(
+        `✅ Tailwind config found: ${path.relative(cwd, tailwindConfigPath)}`
+      );
 
-    // Check if Tailwind config has required content paths
-    const tailwindConfig = await fs.readFile(tailwindConfigPath, "utf8");
-    if (
-      !tailwindConfig.includes("./src/**/*.{ts,tsx}") &&
-      !tailwindConfig.includes("./app/**/*.{ts,tsx}")
-    ) {
-      logger.warn("⚠️  Tailwind config might be missing content paths");
-      logger.info("   Make sure your tailwind.config includes:");
-      logger.info("   './src/**/*.{ts,tsx}' or './app/**/*.{ts,tsx}'");
+      const tailwindConfig = await fs.readFile(tailwindConfigPath, "utf8");
+      if (
+        !tailwindConfig.includes("./src/**/*.{ts,tsx}") &&
+        !tailwindConfig.includes("./app/**/*.{ts,tsx}")
+      ) {
+        logger.warn("⚠️  Tailwind config might be missing content paths");
+        logger.info("   Make sure your tailwind.config includes:");
+        logger.info("   './src/**/*.{ts,tsx}' or './app/**/*.{ts,tsx}'");
+      } else {
+        logger.success("✅ Tailwind config has content paths");
+      }
+    } else if (fs.existsSync(tailwindConfigPath)) {
+      logger.success(
+        `✅ Tailwind config found (optional for v4): ${path.relative(
+          cwd,
+          tailwindConfigPath
+        )}`
+      );
     } else {
-      logger.success("✅ Tailwind config has content paths");
+      logger.info("ℹ️  Tailwind v4 detected: config file is optional");
     }
 
     // Check if utils file exists
@@ -164,14 +195,14 @@ export const check = new Command()
     logger.info("4. Run this command again to re-check your setup");
   });
 
-async function checkPostCSSSetup(cwd: string) {
+async function checkPostCSSSetup(cwd: string): Promise<number | null> {
   logger.info("🔧 Checking PostCSS/Tailwind setup...");
 
   // Check package.json for dependencies
   const packageJsonPath = path.resolve(cwd, "package.json");
   if (!fs.existsSync(packageJsonPath)) {
     logger.error("❌ package.json not found");
-    return;
+    return null;
   }
 
   const packageJson = await fs.readJson(packageJsonPath);
@@ -184,11 +215,15 @@ async function checkPostCSSSetup(cwd: string) {
   if (!dependencies.tailwindcss) {
     logger.error("❌ Tailwind CSS not installed");
     logger.info(`   Run: ${chalk.cyan("npm install tailwindcss@latest")}`);
-    return;
+    return null;
   } else {
-    const version = dependencies.tailwindcss.replace(/[^\d.]/g, "");
-    logger.success(`✅ Tailwind CSS ${version} installed`);
+    const versionLabel = dependencies.tailwindcss;
+    logger.success(`✅ Tailwind CSS ${versionLabel} installed`);
   }
+  const detectedMajor = parseTailwindMajorVersion(dependencies.tailwindcss);
+  const inferredMajor =
+    detectedMajor ?? (dependencies["@tailwindcss/postcss"] ? 4 : null);
+  const isTailwindV4 = inferredMajor !== null && inferredMajor >= 4;
 
   // Check PostCSS (either standalone or @tailwindcss/postcss)
   const hasPostCSS =
@@ -203,7 +238,7 @@ async function checkPostCSSSetup(cwd: string) {
     logger.info(
       "   This fixes the 'tailwindcss directly as PostCSS plugin' error"
     );
-    return;
+    return inferredMajor;
   } else {
     if (dependencies["@tailwindcss/postcss"]) {
       logger.success("✅ @tailwindcss/postcss installed (Tailwind v4+)");
@@ -214,8 +249,12 @@ async function checkPostCSSSetup(cwd: string) {
 
   // Check Autoprefixer
   if (!dependencies.autoprefixer) {
-    logger.warn("⚠️  Autoprefixer not installed (recommended)");
-    logger.info(`   Run: ${chalk.cyan("npm install autoprefixer@latest")}`);
+    if (!isTailwindV4) {
+      logger.warn("⚠️  Autoprefixer not installed (recommended)");
+      logger.info(`   Run: ${chalk.cyan("npm install autoprefixer@latest")}`);
+    } else {
+      logger.info("ℹ️  Autoprefixer not installed (optional for Tailwind v4)");
+    }
   } else {
     logger.success("✅ Autoprefixer installed");
   }
@@ -237,12 +276,13 @@ async function checkPostCSSSetup(cwd: string) {
 
       // Check if config includes Tailwind and detect problematic formats
       const configContent = await fs.readFile(configPath, "utf8");
-      const hasTailwindCSS =
-        configContent.includes("tailwindcss") ||
-        configContent.includes("@tailwindcss/postcss");
+      const hasV4Plugin = configContent.includes("@tailwindcss/postcss");
+      const hasLegacyPlugin =
+        configContent.includes("tailwindcss") && !hasV4Plugin;
+      const hasTailwindCSS = hasV4Plugin || hasLegacyPlugin;
 
       if (hasTailwindCSS) {
-        if (configContent.includes("@tailwindcss/postcss")) {
+        if (hasV4Plugin) {
           logger.success(
             "✅ PostCSS config includes Tailwind CSS (v4+ format)"
           );
@@ -250,16 +290,12 @@ async function checkPostCSSSetup(cwd: string) {
           logger.success("✅ PostCSS config includes Tailwind CSS");
         }
 
-        // Check for the specific error-causing format
-        if (
-          configContent.includes("tailwindcss: {}") &&
-          !configContent.includes("@tailwindcss/postcss")
-        ) {
+        if (isTailwindV4 && hasLegacyPlugin) {
           logger.warn(
-            "⚠️  POTENTIAL ISSUE: Old PostCSS config format detected"
+            "⚠️  POTENTIAL ISSUE: Tailwind v4 with legacy PostCSS config"
           );
           logger.info(
-            "   Your config uses 'tailwindcss: {}' which can cause this error:"
+            "   Update your PostCSS config to use @tailwindcss/postcss"
           );
           logger.info(
             chalk.red(
@@ -277,6 +313,16 @@ async function checkPostCSSSetup(cwd: string) {
           logger.info(chalk.green('      plugins: ["@tailwindcss/postcss"]'));
           logger.info(
             `   3. Or run: ${chalk.cyan("npx @sickui/cli init")} to auto-fix`
+          );
+        } else if (!isTailwindV4 && hasV4Plugin) {
+          logger.warn(
+            "⚠️  POTENTIAL ISSUE: Tailwind v3 with v4 PostCSS plugin"
+          );
+          logger.info(
+            "   Update your PostCSS config to use the tailwindcss plugin"
+          );
+          logger.info(
+            chalk.green("   plugins: { tailwindcss: {}, autoprefixer: {} }")
           );
         }
       } else {
@@ -302,4 +348,6 @@ async function checkPostCSSSetup(cwd: string) {
     logger.info(chalk.gray("     },"));
     logger.info(chalk.gray("   }"));
   }
+
+  return inferredMajor;
 }

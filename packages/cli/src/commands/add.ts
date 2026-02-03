@@ -22,8 +22,10 @@ export const add = new Command()
   )
   .option("-a, --all", "add all available components", false)
   .option("-p, --path <path>", "the path to add the component to.")
+  .option("--skip-install", "skip installing dependencies.", false)
   .action(async (components, opts) => {
     const cwd = path.resolve(opts.cwd);
+    const skipInstall = Boolean(opts.skipInstall);
 
     if (!existsSync(cwd)) {
       logger.error(`The path ${cwd} does not exist. Please try again.`);
@@ -155,32 +157,51 @@ export const add = new Command()
         await fs.writeFile(filePath, content);
       }
 
-      const packageManager = await getPackageManager(cwd);
-
       // Install dependencies.
       if (item.dependencies?.length) {
-        await execa(
-          packageManager,
-          [packageManager === "npm" ? "install" : "add", ...item.dependencies],
-          {
-            cwd,
-          }
-        );
+        if (skipInstall) {
+          logger.warn(
+            `Skipped installing dependencies for ${item.name}: ${item.dependencies.join(
+              ", "
+            )}`
+          );
+        } else {
+          const packageManager = await getPackageManager(cwd);
+          await execa(
+            packageManager,
+            [
+              packageManager === "npm" ? "install" : "add",
+              ...item.dependencies,
+            ],
+            {
+              cwd,
+            }
+          );
+        }
       }
 
       // Install devDependencies.
       if (item.devDependencies?.length) {
-        await execa(
-          packageManager,
-          [
-            packageManager === "npm" ? "install" : "add",
-            packageManager === "npm" ? "--save-dev" : "--dev",
-            ...item.devDependencies,
-          ],
-          {
-            cwd,
-          }
-        );
+        if (skipInstall) {
+          logger.warn(
+            `Skipped installing devDependencies for ${item.name}: ${item.devDependencies.join(
+              ", "
+            )}`
+          );
+        } else {
+          const packageManager = await getPackageManager(cwd);
+          await execa(
+            packageManager,
+            [
+              packageManager === "npm" ? "install" : "add",
+              packageManager === "npm" ? "--save-dev" : "--dev",
+              ...item.devDependencies,
+            ],
+            {
+              cwd,
+            }
+          );
+        }
       }
     }
 

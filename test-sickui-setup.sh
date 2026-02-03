@@ -36,7 +36,7 @@ npx create-next-app@latest sickui-test-app \
 cd sickui-test-app
 
 echo "🔧 Initializing SickUI..."
-npx @sickui/cli@0.0.6 init --yes --defaults
+npx @sickui/cli@0.0.14 init --yes --defaults
 
 echo "🔧 Fixing CSS variables for Tailwind v4..."
 cat > src/app/globals.css << 'EOF'
@@ -124,7 +124,7 @@ body {
 EOF
 
 echo "🎨 Adding button component..."
-npx @sickui/cli@0.0.6 add button --yes
+npx @sickui/cli@0.0.14 add button --yes
 
 echo "🧪 Creating test page..."
 cat > src/app/page.tsx << 'EOF'
@@ -165,7 +165,7 @@ export default function Home() {
 EOF
 
 echo "✅ Running final check..."
-npx @sickui/cli@0.0.6 check
+npx @sickui/cli@0.0.14 check
 
 echo "🏗️ Building the app..."
 npm run build
