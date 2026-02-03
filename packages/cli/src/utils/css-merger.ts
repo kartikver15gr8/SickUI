@@ -98,10 +98,24 @@ function extractExistingVariables(css: string): string[] {
 /**
  * Get missing SickUI variables that need to be added
  */
-function getMissingVariables(existingVars: string[]): string[] {
-  return REQUIRED_SICKUI_VARIABLES.filter(
-    (variable) => !existingVars.includes(variable)
-  );
+function getMissingVariables(
+  existingVars: string[],
+  isTailwindV4: boolean
+): string[] {
+  return REQUIRED_SICKUI_VARIABLES.filter((variable) => {
+    if (existingVars.includes(variable)) {
+      return false;
+    }
+
+    if (isTailwindV4) {
+      const v4Token = `--color-${variable.slice(2)}`;
+      if (existingVars.includes(v4Token)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 }
 
 /**
@@ -121,6 +135,37 @@ function formatVariables(variables: string[], isDark: boolean = false): string {
     .join("\n");
 }
 
+function formatV4Variables(
+  variables: string[],
+  isDark: boolean = false
+): string {
+  const values = isDark ? SICKUI_DARK_VALUES : SICKUI_LIGHT_VALUES;
+  return variables
+    .map((variable) => {
+      const value = values[variable];
+      if (variable === "--radius") {
+        return `  --radius: ${value};`;
+      }
+      return `  --color-${variable.slice(2)}: ${value};`;
+    })
+    .join("\n");
+}
+
+function detectDarkStrategy(css: string): "class" | "media" {
+  const hasClass = /\.dark\s*{/.test(css);
+  const hasMedia = /prefers-color-scheme:\s*dark/.test(css);
+
+  if (hasClass) {
+    return "class";
+  }
+
+  if (hasMedia) {
+    return "media";
+  }
+
+  return "class";
+}
+
 /**
  * Simple and reliable CSS merging approach
  */
@@ -130,14 +175,16 @@ export async function smartMergeCSS(
 ): Promise<void> {
   let existingCSS = await fs.readFile(cssPath, "utf8");
 
-  // Fix v4 to v3 conversion if needed
+  // If the project is explicitly using Tailwind v4, we should NOT convert
+  // v4 syntax back to v3. Only attempt conversion when we're in a v3 setup
+  // but the CSS file appears to contain v4-style directives.
   const hasV4Syntax = existingCSS.includes('@import "tailwindcss"');
   const hasV4Theme = existingCSS.includes("@theme");
 
-  if (hasV4Syntax || hasV4Theme) {
-    // Convert v4 syntax to v3 syntax
+  if (!isTailwindV4 && (hasV4Syntax || hasV4Theme)) {
+    // Convert v4 syntax to v3 syntax so SickUI variables and @apply work
+    // correctly in a Tailwind v3 project.
     existingCSS = convertV4ToV3CSS(existingCSS);
-    isTailwindV4 = false; // Force v3 mode after conversion
   }
 
   // Fix common CSS issues: wrong media query for dark mode
@@ -147,11 +194,13 @@ export async function smartMergeCSS(
       match.replace("prefers-color-scheme: light", "prefers-color-scheme: dark")
   );
 
+  const darkStrategy = detectDarkStrategy(existingCSS);
+
   // Extract existing variables
   const existingVars = extractExistingVariables(existingCSS);
 
   // Determine what variables are missing
-  const missingVars = getMissingVariables(existingVars);
+  const missingVars = getMissingVariables(existingVars, isTailwindV4);
 
   if (missingVars.length === 0) {
     return; // Nothing to add
@@ -160,106 +209,115 @@ export async function smartMergeCSS(
   let appendContent = "";
 
   if (isTailwindV4) {
-    // For Tailwind v4, we need to add variables to @theme block
     const hasThemeBlock = existingCSS.includes("@theme");
+    const darkVars = formatV4Variables(
+      missingVars.filter((variable) => variable !== "--radius"),
+      true
+    );
 
     if (hasThemeBlock) {
-      // Find and enhance existing @theme block
       const themeRegex = /(@theme\s*{)([\s\S]*?)(})/;
       const match = existingCSS.match(themeRegex);
 
       if (match) {
-        const themeVars = missingVars
-          .map((variable) => {
-            const value = SICKUI_LIGHT_VALUES[variable];
-            if (variable === "--radius") {
-              return `  ${variable}: ${value};`;
-            }
-            return `  --color-${variable.slice(2)}: ${value};`;
-          })
-          .join("\n");
-
+        const themeVars = formatV4Variables(missingVars, false);
         const updatedThemeContent =
           match[2] + "\n  /* SickUI theme variables */\n" + themeVars + "\n";
-        const updatedCSS = existingCSS.replace(
+        let updatedCSS = existingCSS.replace(
           themeRegex,
           `$1${updatedThemeContent}$3`
         );
 
-        // Add dark mode @theme block
-        const darkModeVars = missingVars
-          .map((variable) => {
-            const value = SICKUI_DARK_VALUES[variable];
-            if (variable === "--radius") {
-              return `    ${variable}: ${value};`;
-            }
-            return `    --color-${variable.slice(2)}: ${value};`;
-          })
-          .join("\n");
+        if (darkStrategy === "media") {
+          const darkThemeRegex =
+            /(@media\s*\(prefers-color-scheme:\s*dark\)[\s\S]*?@theme\s*{)([\s\S]*?)(})/;
+          const darkMatch = updatedCSS.match(darkThemeRegex);
 
-        // Check if dark mode @theme exists
-        const hasDarkTheme =
-          /@media \(prefers-color-scheme: dark\)[\s\S]*?@theme/.test(
-            updatedCSS
-          );
-
-        if (!hasDarkTheme) {
-          appendContent = `
+          if (darkMatch) {
+            const updatedDarkContent =
+              darkMatch[2] +
+              "\n  /* SickUI dark theme variables */\n" +
+              darkVars +
+              "\n";
+            updatedCSS = updatedCSS.replace(
+              darkThemeRegex,
+              `$1${updatedDarkContent}$3`
+            );
+          } else if (darkVars.trim().length > 0) {
+            updatedCSS += `
 
 @media (prefers-color-scheme: dark) {
   @theme {
-${darkModeVars}
+${darkVars.replace(/^/gm, "  ")}
   }
 }`;
+          }
+        } else if (darkVars.trim().length > 0) {
+          const darkClassRegex = /(\.dark\s*{)([\s\S]*?)(})/;
+          const darkClassMatch = updatedCSS.match(darkClassRegex);
+
+          if (darkClassMatch) {
+            const updatedDarkContent =
+              darkClassMatch[2] +
+              "\n  /* SickUI dark theme variables */\n" +
+              darkVars +
+              "\n";
+            updatedCSS = updatedCSS.replace(
+              darkClassRegex,
+              `$1${updatedDarkContent}$3`
+            );
+          } else {
+            updatedCSS += `
+
+@layer base {
+  .dark {
+${darkVars.replace(/^/gm, "  ")}
+  }
+}`;
+          }
         }
 
-        await fs.writeFile(cssPath, updatedCSS + appendContent, "utf8");
+        await fs.writeFile(cssPath, updatedCSS, "utf8");
         return;
       }
-    } else {
-      // Create new @theme block
-      appendContent += "\n\n@theme {\n";
-      appendContent += missingVars
-        .map((variable) => {
-          const value = SICKUI_LIGHT_VALUES[variable];
-          if (variable === "--radius") {
-            return `  ${variable}: ${value};`;
-          }
-          return `  --color-${variable.slice(2)}: ${value};`;
-        })
-        .join("\n");
-      appendContent += "\n}\n";
+    }
 
-      // Add dark mode @theme
-      const darkModeVars = missingVars
-        .map((variable) => {
-          const value = SICKUI_DARK_VALUES[variable];
-          if (variable === "--radius") {
-            return `    ${variable}: ${value};`;
-          }
-          return `    --color-${variable.slice(2)}: ${value};`;
-        })
-        .join("\n");
+    appendContent += "\n\n@theme {\n";
+    appendContent += formatV4Variables(missingVars, false);
+    appendContent += "\n}\n";
 
-      appendContent += `
+    if (darkVars.trim().length > 0) {
+      if (darkStrategy === "media") {
+        appendContent += `
 @media (prefers-color-scheme: dark) {
   @theme {
-${darkModeVars}
+${darkVars.replace(/^/gm, "  ")}
   }
 }`;
+      } else {
+        appendContent += `
+@layer base {
+  .dark {
+${darkVars.replace(/^/gm, "  ")}
+  }
+}`;
+      }
     }
   } else {
-    // For Tailwind v3, add regular CSS variables
-    appendContent += "\n\n/* SickUI Variables */\n:root {\n";
-    appendContent += formatVariables(missingVars, false);
-    appendContent += "\n}";
-  }
+    appendContent += "\n\n@layer base {\n  :root {\n";
+    appendContent += formatVariables(missingVars, false).replace(/^/gm, "  ");
+    appendContent += "\n  }\n}\n";
 
-  // Add dark mode variables for Tailwind v3 only (v4 handles it above)
-  if (missingVars.length > 0 && !isTailwindV4) {
-    appendContent += "\n\n@media (prefers-color-scheme: dark) {\n  :root {\n";
-    appendContent += formatVariables(missingVars, true).replace(/^/gm, "  ");
-    appendContent += "\n  }\n}";
+    if (darkStrategy === "media") {
+      appendContent +=
+        "\n@media (prefers-color-scheme: dark) {\n  :root {\n";
+      appendContent += formatVariables(missingVars, true).replace(/^/gm, "  ");
+      appendContent += "\n  }\n}";
+    } else {
+      appendContent += "\n@layer base {\n  .dark {\n";
+      appendContent += formatVariables(missingVars, true).replace(/^/gm, "  ");
+      appendContent += "\n  }\n}";
+    }
   }
 
   // Add essential base styles for SickUI components if not present
@@ -296,50 +354,92 @@ function convertV4ToV3CSS(css: string): string {
     "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n"
   );
 
-  // Remove @theme blocks and extract variables
-  const themeRegex = /@theme\s+[^{]*\{([^}]*)\}/g;
-  let themeMatch;
-  const extractedVars: string[] = [];
-
-  while ((themeMatch = themeRegex.exec(convertedCSS)) !== null) {
-    const themeContent = themeMatch[1];
-
-    // Convert --color-* variables to regular CSS variables
+  const extractVars = (content: string): string[] => {
+    const vars: string[] = [];
     const colorVarRegex = /--color-([^:]+):\s*([^;]+);/g;
     let colorMatch;
 
-    while ((colorMatch = colorVarRegex.exec(themeContent)) !== null) {
+    while ((colorMatch = colorVarRegex.exec(content)) !== null) {
       const varName = colorMatch[1];
       const varValue = colorMatch[2].trim();
 
-      // Skip if it's a var() reference
       if (!varValue.startsWith("var(")) {
-        extractedVars.push(`  --${varName}: ${varValue};`);
+        vars.push(`  --${varName}: ${varValue};`);
       }
     }
 
-    // Extract other variables (like --radius)
     const otherVarRegex = /--((?!color-)[^:]+):\s*([^;]+);/g;
     let otherMatch;
 
-    while ((otherMatch = otherVarRegex.exec(themeContent)) !== null) {
+    while ((otherMatch = otherVarRegex.exec(content)) !== null) {
       const varName = otherMatch[1];
       const varValue = otherMatch[2].trim();
 
       if (!varValue.startsWith("var(")) {
-        extractedVars.push(`  --${varName}: ${varValue};`);
+        vars.push(`  --${varName}: ${varValue};`);
       }
     }
+
+    return vars;
+  };
+
+  const extractedVars: string[] = [];
+  const extractedDarkVars: string[] = [];
+
+  // Extract dark variables from media theme blocks first
+  const darkMediaRegex =
+    /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{([\s\S]*?)\}/g;
+  let darkMediaMatch;
+
+  while ((darkMediaMatch = darkMediaRegex.exec(convertedCSS)) !== null) {
+    const mediaContent = darkMediaMatch[1];
+    const themeMatches = mediaContent.matchAll(/@theme\s*{([\s\S]*?)}/g);
+
+    for (const match of themeMatches) {
+      extractedDarkVars.push(...extractVars(match[1]));
+    }
+  }
+
+  convertedCSS = convertedCSS.replace(darkMediaRegex, "");
+
+  // Extract dark variables from .dark blocks (v4 class-based)
+  const darkClassRegex = /\.dark\s*{([\s\S]*?)}/g;
+  let darkClassMatch;
+
+  while ((darkClassMatch = darkClassRegex.exec(convertedCSS)) !== null) {
+    const darkContent = darkClassMatch[1];
+    const darkVars = extractVars(darkContent);
+    if (darkVars.length > 0) {
+      extractedDarkVars.push(...darkVars);
+    }
+  }
+
+  convertedCSS = convertedCSS.replace(
+    /\.dark\s*{[\s\S]*?--color-[\s\S]*?}/g,
+    ""
+  );
+
+  // Extract light variables from remaining @theme blocks
+  const themeRegex = /@theme\s+[^{]*\{([^}]*)\}/g;
+  let themeMatch;
+
+  while ((themeMatch = themeRegex.exec(convertedCSS)) !== null) {
+    extractedVars.push(...extractVars(themeMatch[1]));
   }
 
   // Remove all @theme blocks
   convertedCSS = convertedCSS.replace(/@theme\s+[^{]*\{[^}]*\}/g, "");
 
-  // If we extracted variables, add them to :root
-  if (extractedVars.length > 0) {
-    const rootVars = `:root {\n${extractedVars.join("\n")}\n}\n\n`;
+  const unique = (vars: string[]) => Array.from(new Set(vars));
+  const lightVars = unique(extractedVars);
+  const darkVars = unique(extractedDarkVars);
 
-    // Insert after the @tailwind directives
+  if (lightVars.length > 0) {
+    let rootVars = `:root {\n${lightVars.join("\n")}\n}\n\n`;
+    if (darkVars.length > 0) {
+      rootVars += `.dark {\n${darkVars.join("\n")}\n}\n\n`;
+    }
+
     const tailwindDirectives =
       "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n";
     convertedCSS = convertedCSS.replace(

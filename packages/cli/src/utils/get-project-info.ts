@@ -82,20 +82,20 @@ export async function resolveImport(
   return importPath;
 }
 
-export async function getProjectInfo() {
-  const cwd = process.cwd();
+export async function getProjectInfo(cwd: string = process.cwd()) {
+  const projectCwd = cwd;
 
   const [packageJson, tsConfig] = await Promise.allSettled([
-    fs.readJson(path.resolve(cwd, "package.json")),
-    fs.readJson(path.resolve(cwd, "tsconfig.json")),
+    fs.readJson(path.resolve(projectCwd, "package.json")),
+    fs.readJson(path.resolve(projectCwd, "tsconfig.json")),
   ]);
 
   const isTypeScript = tsConfig.status === "fulfilled";
   const isNextJs =
     packageJson.status === "fulfilled" && packageJson.value?.dependencies?.next;
-  const isSrcDir = await fs.pathExists(path.resolve(cwd, "src"));
+  const isSrcDir = await fs.pathExists(path.resolve(projectCwd, "src"));
   const isAppDir = await fs.pathExists(
-    path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`)
+    path.resolve(projectCwd, `${isSrcDir ? "src/" : ""}app`)
   );
 
   return {

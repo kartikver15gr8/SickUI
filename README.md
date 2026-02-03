@@ -14,15 +14,40 @@ A modern, high-performance React component library built with TypeScript, Tailwi
 ## 📦 Setup
 
 ```bash
-# Initialization
+# Initialize SickUI in your app (Tailwind v3 or v4)
 npx @sickui/cli init
 
-# Install components
+# Add components
 npx @sickui/cli add button
-
-# Start development
-turbo dev
 ```
+
+This is a **CLI-first** project: the CLI copies fully editable components into your app and wires up Tailwind + global styles for you.
+
+### Tailwind CSS support (v3 & v4)
+
+- SickUI **detects and preserves** your Tailwind major version:
+  - If Tailwind is already installed, it keeps that major (3 or 4).
+  - If Tailwind is missing, it defaults to **Tailwind v4** for new projects.
+- It then installs the right dependencies and config:
+  - **Tailwind v3**: `tailwindcss@^3.4.0`, `postcss`, `autoprefixer`, classic `tailwind.config` + `postcss.config`.
+  - **Tailwind v4**: `tailwindcss@latest`, `postcss`, `@tailwindcss/postcss`, CSS-first config with `@import "tailwindcss"; @theme { ... }`.
+
+After running `npx @sickui/cli init`, make sure the generated global CSS file is imported:
+
+- **Next.js App Router**: in `app/layout.tsx` or `src/app/layout.tsx`
+- **Next.js Pages Router**: in `pages/_app.tsx`
+- **Vite/CRA/others**: in `src/main.tsx` or `src/index.tsx`
+
+Then add components:
+
+```bash
+npx @sickui/cli add button badge skeleton
+```
+
+SickUI will:
+
+- Copy components into `@/components/ui/*`
+- Install any extra dependencies (e.g. `@radix-ui/react-slot`, `clsx`, `tailwind-merge`)
 
 ## 🏗️ Project Structure
 

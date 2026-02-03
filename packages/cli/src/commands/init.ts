@@ -4,11 +4,12 @@ import path from "path";
 import chalk from "chalk";
 import { logger } from "../utils/logger";
 import { getProjectInfo } from "../utils/get-project-info";
+import { getOrDetectTailwindMajorVersion } from "../utils/tailwind";
 import {
-  // COMPONENTS_JSON_TEMPLATE,
   UTILS_TEMPLATE,
   TAILWIND_CONFIG_TEMPLATE,
   TAILWIND_CONFIG_V4_TEMPLATE,
+  TAILWIND_CONFIG_V4_TEMPLATE_TS,
   GLOBALS_CSS_TEMPLATE,
   GLOBALS_CSS_V4_TEMPLATE,
 } from "../utils/templates";
@@ -29,11 +30,11 @@ const TAILWIND_V3_DEPENDENCIES = [
   "autoprefixer@latest",
 ];
 
-// const TAILWIND_V4_DEPENDENCIES = [
-//   "tailwindcss@latest",
-//   "postcss@latest",
-//   "@tailwindcss/postcss@latest",
-// ];
+const TAILWIND_V4_DEPENDENCIES = [
+  "tailwindcss@latest",
+  "postcss@latest",
+  "@tailwindcss/postcss@latest",
+];
 
 export const init = new Command()
   .name("init")
@@ -45,6 +46,7 @@ export const init = new Command()
     "the working directory. defaults to the current directory.",
     process.cwd()
   )
+  .option("--skip-install", "skip dependency installation.", false)
   .action(async (opts) => {
     const cwd = path.resolve(opts.cwd);
 
@@ -54,14 +56,16 @@ export const init = new Command()
       process.exit(1);
     }
 
-    const projectInfo = await getProjectInfo();
+    const projectInfo = await getProjectInfo(cwd);
     const projectConfig = await promptForConfig(
       cwd,
       projectInfo,
       opts.defaults
     );
 
-    await runInit(cwd, projectConfig, projectInfo);
+    await runInit(cwd, projectConfig, projectInfo, {
+      skipInstall: opts.skipInstall,
+    });
 
     logger.info("");
     logger.info(`${chalk.green("Success!")} Project initialization completed.`);
@@ -148,42 +152,67 @@ export async function promptForConfig(
   return config;
 }
 
-export async function runInit(cwd: string, config: any, projectInfo: any) {
+export async function runInit(
+  cwd: string,
+  config: any,
+  projectInfo: any,
+  options: { skipInstall?: boolean } = {}
+) {
+  const skipInstall = Boolean(options.skipInstall);
   logger.info(`Initializing project...`);
 
-  // Check and fix Tailwind/PostCSS setup first
-  await ensureTailwindSetup(cwd);
+  // Decide which Tailwind major version this project should use.
+  const desiredTailwindMajor = await getOrDetectTailwindMajorVersion(cwd);
+  await ensureTailwindSetup(cwd, desiredTailwindMajor);
+  const isTailwindV4 = desiredTailwindMajor >= 4;
 
-  // Remove conflicting Tailwind v4 packages first
-  await removeConflictingTailwindPackages(cwd);
-
-  // Install dependencies first so we can detect the correct Tailwind version
   logger.info("");
-  logger.info("Installing dependencies...");
-  const packageManager = await getPackageManager(cwd);
-
-  // Install Tailwind v3 by default to match SickUI components
-  const dependenciesToInstall = TAILWIND_V3_DEPENDENCIES;
-
-  // Install Tailwind and PostCSS dependencies first
-  await execa(
-    packageManager,
-    [packageManager === "npm" ? "install" : "add", ...dependenciesToInstall],
-    {
-      cwd,
-    }
+  logger.info(
+    `Using Tailwind CSS v${desiredTailwindMajor} for this project (${chalk.cyan(
+      isTailwindV4 ? "v4 (CSS-first)" : "v3"
+    )}).`
   );
-  logger.success(`Installed Tailwind CSS dependencies`);
 
-  // Install project dependencies
-  await execa(
-    packageManager,
-    [packageManager === "npm" ? "install" : "add", ...PROJECT_DEPENDENCIES],
-    {
-      cwd,
-    }
-  );
-  logger.success(`Installed project dependencies`);
+  if (!skipInstall) {
+    // Remove conflicting Tailwind packages first, based on the desired major version.
+    await removeConflictingTailwindPackages(cwd, desiredTailwindMajor);
+
+    // Install Tailwind and PostCSS dependencies for the chosen major version.
+    logger.info("");
+    logger.info("Installing Tailwind CSS dependencies...");
+    const packageManager = await getPackageManager(cwd);
+
+    const dependenciesToInstall =
+      desiredTailwindMajor >= 4
+        ? TAILWIND_V4_DEPENDENCIES
+        : TAILWIND_V3_DEPENDENCIES;
+
+    await execa(
+      packageManager,
+      [packageManager === "npm" ? "install" : "add", ...dependenciesToInstall],
+      {
+        cwd,
+      }
+    );
+    logger.success(
+      `Installed Tailwind CSS ${isTailwindV4 ? "v4+" : "v3"} dependencies`
+    );
+
+    // Install shared project dependencies (SickUI related utilities).
+    await execa(
+      packageManager,
+      [packageManager === "npm" ? "install" : "add", ...PROJECT_DEPENDENCIES],
+      {
+        cwd,
+      }
+    );
+    logger.success(`Installed project dependencies`);
+  } else {
+    logger.info("");
+    logger.info(
+      "Skipping dependency installation (--skip-install). Install dependencies manually."
+    );
+  }
 
   // Write components.json.
   logger.info("");
@@ -195,12 +224,11 @@ export async function runInit(cwd: string, config: any, projectInfo: any) {
   );
   logger.success(`Created ${chalk.green("components.json")}`);
 
-  // NOW detect Tailwind version after installation
-  const isTailwindV4 = await isTailwindVersion4(cwd);
-
   // Write tailwind config with appropriate template
   const tailwindTemplate = isTailwindV4
-    ? TAILWIND_CONFIG_V4_TEMPLATE
+    ? config.tailwind.config.endsWith(".ts")
+      ? TAILWIND_CONFIG_V4_TEMPLATE_TS
+      : TAILWIND_CONFIG_V4_TEMPLATE
     : TAILWIND_CONFIG_TEMPLATE;
   await fs.writeFile(
     path.resolve(cwd, config.tailwind.config),
@@ -213,8 +241,8 @@ export async function runInit(cwd: string, config: any, projectInfo: any) {
     }`
   );
 
-  // Write PostCSS config (force v3 format)
-  await ensurePostCSSConfig(cwd, true);
+  // Write PostCSS config using the appropriate format for the chosen Tailwind version.
+  await ensurePostCSSConfig(cwd, desiredTailwindMajor);
 
   // Write css file.
   const cssDir = path.resolve(cwd, path.dirname(config.tailwind.css));
@@ -303,7 +331,10 @@ export async function getPackageManager(
   return "npm";
 }
 
-async function removeConflictingTailwindPackages(cwd: string) {
+async function removeConflictingTailwindPackages(
+  cwd: string,
+  desiredMajor: number
+) {
   const packageJsonPath = path.resolve(cwd, "package.json");
 
   if (!existsSync(packageJsonPath)) {
@@ -312,30 +343,33 @@ async function removeConflictingTailwindPackages(cwd: string) {
 
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf8"));
-    const dependencies = {
+    const dependencies: Record<string, string | undefined> = {
       ...packageJson.dependencies,
       ...packageJson.devDependencies,
     };
 
-    const conflictingPackages = [];
+    const conflictingPackages: string[] = [];
 
-    // Check for Tailwind v4 packages that conflict with v3
-    if (dependencies["@tailwindcss/postcss"]) {
-      conflictingPackages.push("@tailwindcss/postcss");
-      logger.info(
-        "🔄 Removing conflicting @tailwindcss/postcss (v4) package..."
-      );
-    }
-
-    // If we have both v3 and v4 tailwindcss, remove the newer one
-    if (dependencies.tailwindcss) {
-      const version = dependencies.tailwindcss.replace(/[^\d.]/g, "");
+    const tailwindDep = dependencies.tailwindcss;
+    if (tailwindDep) {
+      const version = tailwindDep.replace(/[^\d.]/g, "");
       const majorVersion = parseInt(version.split(".")[0]);
 
-      if (majorVersion >= 4) {
+      if (!Number.isNaN(majorVersion) && majorVersion !== desiredMajor) {
         conflictingPackages.push("tailwindcss");
-        logger.info("🔄 Removing Tailwind CSS v4 to install v3...");
+        logger.info(
+          `🔄 Removing Tailwind CSS v${majorVersion} to install v${desiredMajor}...`
+        );
       }
+    }
+
+    // @tailwindcss/postcss is only needed for Tailwind v4+
+    const hasTailwindPostCSS = Boolean(dependencies["@tailwindcss/postcss"]);
+    if (hasTailwindPostCSS && desiredMajor < 4) {
+      conflictingPackages.push("@tailwindcss/postcss");
+      logger.info(
+        "🔄 Removing @tailwindcss/postcss (Tailwind v4 plugin) for a Tailwind v3 setup..."
+      );
     }
 
     if (conflictingPackages.length > 0) {
@@ -357,7 +391,7 @@ async function removeConflictingTailwindPackages(cwd: string) {
   }
 }
 
-async function ensureTailwindSetup(cwd: string) {
+async function ensureTailwindSetup(cwd: string, desiredTailwindMajor: number) {
   const packageJsonPath = path.resolve(cwd, "package.json");
 
   if (!existsSync(packageJsonPath)) {
@@ -367,7 +401,7 @@ async function ensureTailwindSetup(cwd: string) {
 
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf8"));
-    const dependencies = {
+    const dependencies: Record<string, string | undefined> = {
       ...packageJson.dependencies,
       ...packageJson.devDependencies,
     };
@@ -375,7 +409,9 @@ async function ensureTailwindSetup(cwd: string) {
     // Check for Tailwind CSS version
     if (dependencies.tailwindcss) {
       const tailwindVersion = dependencies.tailwindcss.replace(/[^\d.]/g, "");
-      logger.info(`📦 Found Tailwind CSS ${tailwindVersion}`);
+      if (tailwindVersion) {
+        logger.info(`📦 Found Tailwind CSS ${tailwindVersion}`);
+      }
     }
 
     // Check for PostCSS
@@ -385,17 +421,79 @@ async function ensureTailwindSetup(cwd: string) {
 
     // Check for autoprefixer
     if (!dependencies.autoprefixer) {
-      logger.warn("⚠️  Autoprefixer not found - will install latest version");
+      if (desiredTailwindMajor >= 4) {
+        logger.info("ℹ️  Autoprefixer not found (optional for Tailwind v4)");
+      } else {
+        logger.warn("⚠️  Autoprefixer not found - will install latest version");
+      }
     }
   } catch (error) {
     logger.warn("⚠️  Could not read package.json");
   }
 }
 
-async function ensurePostCSSConfig(cwd: string, forceV3: boolean = false) {
+async function ensurePostCSSConfig(cwd: string, desiredTailwindMajor: number) {
   const postCSSConfigPath = path.resolve(cwd, "postcss.config.js");
   const postCSSConfigMjsPath = path.resolve(cwd, "postcss.config.mjs");
   const postCSSConfigCjsPath = path.resolve(cwd, "postcss.config.cjs");
+  const isTailwindV4 = desiredTailwindMajor >= 4;
+
+  const renderPostCSSConfig = (useV4: boolean, isESM: boolean) => {
+    if (useV4) {
+      return isESM
+        ? `const config = {
+  plugins: ["@tailwindcss/postcss"],
+};
+
+export default config;`
+        : `module.exports = {
+  plugins: ["@tailwindcss/postcss"],
+};`;
+    }
+
+    return isESM
+      ? `const config = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+
+export default config;`
+      : `module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};`;
+  };
+
+  const updatePostCSSConfigContent = (content: string) => {
+    let updated = content;
+
+    if (isTailwindV4) {
+      updated = updated.replace(
+        /tailwindcss\s*:\s*\{\s*\}/g,
+        '"@tailwindcss/postcss": {}'
+      );
+      updated = updated.replace(
+        /require\(["']tailwindcss["']\)/g,
+        'require("@tailwindcss/postcss")'
+      );
+      updated = updated.replace(
+        /from\s+["']tailwindcss["']/g,
+        'from "@tailwindcss/postcss"'
+      );
+      updated = updated.replace(
+        /["']tailwindcss["']/g,
+        '"@tailwindcss/postcss"'
+      );
+    } else {
+      updated = updated.replace(/@tailwindcss\/postcss/g, "tailwindcss");
+    }
+
+    return updated;
+  };
 
   // Check if PostCSS config already exists
   let existingConfigPath = "";
@@ -407,107 +505,51 @@ async function ensurePostCSSConfig(cwd: string, forceV3: boolean = false) {
 
   if (existingConfigPath) {
     const configContent = await fs.readFile(existingConfigPath, "utf8");
+    const hasV4Plugin = configContent.includes("@tailwindcss/postcss");
+    const hasLegacyPlugin =
+      configContent.includes("tailwindcss") && !hasV4Plugin;
 
-    // If forceV3 is true, update existing config to v3 format
-    if (forceV3) {
-      logger.info("🔄 Updating PostCSS config to Tailwind v3 format...");
-
-      // Use appropriate syntax based on file extension
-      const isESM = existingConfigPath.endsWith(".mjs");
-      const v3PostCSSConfig = isESM
-        ? `const config = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-};
-
-export default config;`
-        : `module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}`;
-
-      await fs.writeFile(existingConfigPath, v3PostCSSConfig, "utf8");
-      logger.success(
-        `✅ Updated ${path.basename(existingConfigPath)} to v3 format`
-      );
+    if ((isTailwindV4 && hasV4Plugin) || (!isTailwindV4 && hasLegacyPlugin)) {
+      logger.info("📄 PostCSS config already exists");
       return;
     }
 
-    logger.info("📄 PostCSS config already exists");
+    const updatedContent = updatePostCSSConfigContent(configContent);
+    const updatedHasV4 = updatedContent.includes("@tailwindcss/postcss");
+    const updatedHasLegacy =
+      updatedContent.includes("tailwindcss") && !updatedHasV4;
 
-    // Check for problematic old format
     if (
-      configContent.includes("tailwindcss: {}") &&
-      !configContent.includes("@tailwindcss/postcss")
+      (isTailwindV4 && updatedHasV4) ||
+      (!isTailwindV4 && updatedHasLegacy)
     ) {
-      logger.warn("⚠️  Found old PostCSS config format that may cause errors");
-      logger.info(
-        "   Your config uses 'tailwindcss: {}' which can cause PostCSS plugin errors"
-      );
-      logger.info(
-        "   Consider updating to use '@tailwindcss/postcss' for Tailwind v4+"
-      );
+      if (updatedContent !== configContent) {
+        logger.info(
+          `🔄 Updating ${path.basename(existingConfigPath)} for Tailwind ${
+            isTailwindV4 ? "v4" : "v3"
+          }...`
+        );
+        await fs.writeFile(existingConfigPath, updatedContent, "utf8");
+        logger.success(
+          `✅ Updated ${path.basename(
+            existingConfigPath
+          )} to Tailwind ${isTailwindV4 ? "v4" : "v3"} format`
+        );
+      }
+      return;
     }
+
+    logger.warn(
+      "⚠️  Existing PostCSS config could not be safely updated. Please update it manually."
+    );
     return;
   }
 
-  // Detect Tailwind version to create appropriate config
-  const packageJsonPath = path.resolve(cwd, "package.json");
-  let useLegacyFormat = true;
-
-  // Force v3 format if requested
-  if (forceV3) {
-    useLegacyFormat = true;
-  } else if (existsSync(packageJsonPath)) {
-    try {
-      const packageJson = JSON.parse(
-        await fs.readFile(packageJsonPath, "utf8")
-      );
-      const dependencies = {
-        ...packageJson.dependencies,
-        ...packageJson.devDependencies,
-      };
-
-      if (dependencies.tailwindcss) {
-        const version = dependencies.tailwindcss.replace(/[^\d.]/g, "");
-        const majorVersion = parseInt(version.split(".")[0]);
-
-        // Use new format for Tailwind v4+
-        if (majorVersion >= 4) {
-          useLegacyFormat = false;
-        }
-      }
-    } catch (error) {
-      // Fall back to legacy format if we can't read package.json
-    }
-  }
-
-  // Create appropriate PostCSS config based on Tailwind version
-  let postCSSConfig;
-
-  if (useLegacyFormat) {
-    // Legacy format for Tailwind v3 and below
-    postCSSConfig = `module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}`;
-  } else {
-    // New format for Tailwind v4+
-    postCSSConfig = `module.exports = {
-  plugins: ["@tailwindcss/postcss"],
-}`;
-  }
-
+  const postCSSConfig = renderPostCSSConfig(isTailwindV4, false);
   await fs.writeFile(postCSSConfigPath, postCSSConfig, "utf8");
   logger.success(
     `Created ${chalk.green("postcss.config.js")} ${
-      useLegacyFormat ? "(legacy format)" : "(modern format)"
+      isTailwindV4 ? "(v4 format)" : "(v3 format)"
     }`
   );
 }
@@ -557,30 +599,4 @@ async function ensureCSSFile(
       isTailwindV4 ? "(v4 compatible)" : "(v3 compatible)"
     }`
   );
-}
-
-async function isTailwindVersion4(cwd: string): Promise<boolean> {
-  const packageJsonPath = path.resolve(cwd, "package.json");
-
-  if (!existsSync(packageJsonPath)) {
-    return false;
-  }
-
-  try {
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf8"));
-    const dependencies = {
-      ...packageJson.dependencies,
-      ...packageJson.devDependencies,
-    };
-
-    if (dependencies.tailwindcss) {
-      const version = dependencies.tailwindcss.replace(/[^\d.]/g, "");
-      const majorVersion = parseInt(version.split(".")[0]);
-      return majorVersion >= 4;
-    }
-  } catch (error) {
-    // Fall back to false if we can't read package.json
-  }
-
-  return false;
 }

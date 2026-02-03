@@ -5,22 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }`;
 
-export const COMPONENTS_JSON_TEMPLATE = `{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
-  "rsc": true,
-  "tsx": true,
-  "tailwind": {
-    "config": "tailwind.config.js",
-    "css": "app/globals.css",
-    "baseColor": "slate",
-    "cssVariables": true
-  },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils"
-  }
-}`;
 
 export const TAILWIND_CONFIG_TEMPLATE = `/** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -100,10 +84,13 @@ module.exports = {
   plugins: [require("tailwindcss-animate")],
 }`;
 
-export const TAILWIND_CONFIG_V4_TEMPLATE = `// Tailwind CSS v4 doesn't use this config file
-// All configuration is done in CSS using @theme
-// This file is kept for compatibility but is not used
-export default {}`;
+export const TAILWIND_CONFIG_V4_TEMPLATE = `// Tailwind CSS v4 doesn't require this config file.
+// Configuration lives in CSS via @theme. This file is kept for compatibility.
+module.exports = {};`;
+
+export const TAILWIND_CONFIG_V4_TEMPLATE_TS = `// Tailwind CSS v4 doesn't require this config file.
+// Configuration lives in CSS via @theme. This file is kept for compatibility.
+export default {};`;
 
 export const GLOBALS_CSS_TEMPLATE = `/*
  * SickUI Global Styles
@@ -208,8 +195,8 @@ export const GLOBALS_CSS_V4_TEMPLATE = `/*
   --radius: 0.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  @theme {
+@layer base {
+  .dark {
     --color-background: 0 0% 2.4%;
     --color-foreground: 210 40% 98%;
     --color-card: 0 0% 2.4%;

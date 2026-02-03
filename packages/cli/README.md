@@ -4,25 +4,34 @@ A CLI for adding SickUI components to your project.
 
 ## Installation
 
+You can run the CLI via `npx` (recommended) or install it globally:
+
 ```bash
+# Recommended: run via npx
+npx @sickui/cli init
+
+# Or install globally
 npm install -g @sickui/cli
 ```
 
-## Usage
+## Tailwind CSS support (v3 & v4)
 
-Use the `sickui` command to add components to your project.
+The CLI is **Tailwind-version aware**:
 
-```bash
-npx @sickui/cli init
-```
+- If your project already has Tailwind, it **keeps that major version** (3 or 4).
+- If Tailwind is not installed yet, it defaults to **Tailwind v4**.
+- It then:
+  - Installs the correct Tailwind + PostCSS dependencies.
+  - Writes a matching `tailwind.config` and `postcss.config`.
+  - Generates or merges a global CSS file with SickUI design tokens and base styles.
 
-You will be asked a few questions to configure `components.json`:
+Make sure the generated global CSS is imported in your app:
 
-```txt
-Which style would you like to use? › Default
-Which color would you like to use as base color? › Slate
-Would you like to use CSS variables for colors? › no / yes
-```
+- Next.js App Router: `app/layout.tsx` or `src/app/layout.tsx`
+- Next.js Pages Router: `pages/_app.tsx`
+- Vite/CRA: `src/main.tsx` or `src/index.tsx`
+
+After that, use the `add` command to copy components into your project.
 
 ### init
 
@@ -31,6 +40,14 @@ npx @sickui/cli init
 ```
 
 Initialize your project and install dependencies.
+
+You will be asked a few questions to configure `components.json`:
+
+```txt
+Which style would you like to use? › default
+Which color would you like to use as base color? › slate
+Would you like to use CSS variables for colors? › no / yes
+```
 
 #### Options
 
@@ -43,6 +60,7 @@ Options:
   -y, --yes        skip confirmation prompt. (default: false)
   -d, --defaults,  use default configuration. (default: false)
   -c, --cwd <cwd>  the working directory. defaults to the current directory.
+  --skip-install   skip dependency installation. (default: false)
   -h, --help       display help for command
 ```
 
@@ -80,6 +98,7 @@ Options:
   -c, --cwd <cwd>    the working directory. defaults to the current directory.
   -a, --all          add all available components (default: false)
   -p, --path <path>  the path to add the component to.
+  --skip-install     skip installing dependencies. (default: false)
   -h, --help         display help for command
 ```
 
